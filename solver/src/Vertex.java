@@ -7,7 +7,7 @@ import java.util.List;
 public class Vertex {
 	
 	public Vertex parent;
-	public Vertex[] children;
+	public List<Vertex> children = new LinkedList<>();
 	public double [][] A;
 	public double [] b;
 	public double [] x;
@@ -16,9 +16,13 @@ public class Vertex {
 	public int eliminatedDofs;
 	public List<Element> boundaryElements = new LinkedList<>();
 	
-	public Vertex(Vertex parent){
-		this.parent = parent;
-		
+//	public Vertex(Vertex parent){
+//		this.parent = parent;
+//		
+//	}
+	
+	public Vertex(Element e){
+		element = e;
 	}
 
 	
