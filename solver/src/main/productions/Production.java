@@ -1,8 +1,13 @@
+package main.productions;
+
 
 
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+
+import main.scheduler.Node;
+import main.tree.Vertex;
 
 public abstract class Production implements Runnable, Node {
 	
