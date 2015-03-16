@@ -26,7 +26,7 @@ public abstract class Production implements Runnable, Node {
 	@Override
 	public void run() {
 		try{
-			apply(vertex);
+			apply();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -35,7 +35,7 @@ public abstract class Production implements Runnable, Node {
 		
 	}
 	
-	public abstract void apply(Vertex vert);
+	public abstract void apply();
 
 	public CountDownLatch getLatch() {
 		return latch;

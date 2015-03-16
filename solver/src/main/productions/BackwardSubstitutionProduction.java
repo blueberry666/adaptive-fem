@@ -14,14 +14,14 @@ public class BackwardSubstitutionProduction extends Production{
 	}
 
 	@Override
-	public void apply(Vertex vert) {
+	public void apply() {
 		
-		for(Vertex child : vert.children){
-			double [] x = new double[vert.A.length];
+		for(Vertex child : vertex.children){
+			double [] x = new double[vertex.A.length];
 			int i = 0;
 			for(DOF d : child.getNotEliminatedDOFS()){
-				int parentI = vert.rowDofs.indexOf(d);
-				x[i] = vert.x[parentI];
+				int parentI = vertex.rowDofs.indexOf(d);
+				x[i] = vertex.x[parentI];
 				++i;
 			}
 

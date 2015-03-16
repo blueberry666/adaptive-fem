@@ -1,9 +1,7 @@
 package main.productions;
+
 import main.MatrixUtil;
 import main.tree.Vertex;
-
-
-
 
 public class SolveRootProduction extends Production {
 
@@ -13,14 +11,14 @@ public class SolveRootProduction extends Production {
 	}
 
 	@Override
-	public void apply(Vertex vert) {
+	public void apply() {
 		// TODO Auto-generated method stubSystem.out.println("root b:");
-		MatrixUtil.printVector(vert.b);
+		MatrixUtil.printVector(vertex.b);
 		System.out.println();
-		vert.x = MatrixUtil.gaussianElimination(vert.A, vert.b);
-		
+		vertex.x = MatrixUtil.gaussianElimination(vertex.A, vertex.b);
+
 		System.out.println("root x: ");
-		MatrixUtil.printVector(vert.x);
+		MatrixUtil.printVector(vertex.x);
 		System.out.println();
 
 	}

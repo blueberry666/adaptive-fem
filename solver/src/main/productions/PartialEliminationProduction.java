@@ -12,8 +12,8 @@ public class PartialEliminationProduction extends Production {
 	}
 
 	@Override
-	public void apply(Vertex vert) {
-		MatrixUtil.partiallyEliminate(vert.A, vert.b, vert.eliminatedDofs);
+	public void apply() {
+		MatrixUtil.partiallyEliminate(vertex.A, vertex.b, vertex.eliminatedDofs);
 
 	}
 

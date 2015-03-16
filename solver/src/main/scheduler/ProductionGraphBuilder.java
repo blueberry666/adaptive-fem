@@ -8,9 +8,16 @@ import main.productions.CombineChildrenProduction;
 import main.productions.PartialEliminationProduction;
 import main.productions.Production;
 import main.productions.SolveRootProduction;
+import main.productions.productionFactory.ProductionFactory;
 import main.tree.Vertex;
 
 public class ProductionGraphBuilder {
+	
+	private ProductionFactory factory;
+	
+	public ProductionGraphBuilder(ProductionFactory factory){
+		this.factory = factory;
+	}
 
 	public Set<NotSoDummyNode> makeGraph(Vertex root) {
 		NotSoDummyNode rootNode = makeLeftSideOfGraph(root, null);
@@ -23,26 +30,33 @@ public class ProductionGraphBuilder {
 	private NotSoDummyNode makeLeftSideOfGraph(Vertex root,
 			NotSoDummyNode parent) {
 
-		CombineChildrenProduction combineProd = new CombineChildrenProduction(
-				root);
-		NotSoDummyNode combineNode = new NotSoDummyNode("notroot", combineProd);
-		Production elimProd;
+		if(!root.children.isEmpty()){
+			CombineChildrenProduction combineProd = new CombineChildrenProduction(
+					root);
+			NotSoDummyNode combineNode = new NotSoDummyNode("notroot", combineProd);
+			Production elimProd;
 
-		elimProd = parent != null ? new PartialEliminationProduction(root)
-				: new SolveRootProduction(root);
-		NotSoDummyNode elimNode = new NotSoDummyNode("notroot", elimProd);
+			elimProd = parent != null ? new PartialEliminationProduction(root)
+					: new SolveRootProduction(root);
+			NotSoDummyNode elimNode = new NotSoDummyNode("notroot", elimProd);
 
-		if (parent != null) {
-			parent.addInNode(elimNode);
+			if (parent != null) {
+				parent.addInNode(elimNode);
+			}
+			elimNode.addInNode(combineNode);
+
+			for (Vertex v : root.children) {
+				makeLeftSideOfGraph(v, combineNode);
+
+			}
+
+			return elimNode;
+		}else{
+			Production p = factory.makeProduction(root);
+			return new NotSoDummyNode("leaf", p);
+			
 		}
-		elimNode.addInNode(combineNode);
-
-		for (Vertex v : root.children) {
-			makeLeftSideOfGraph(v, combineNode);
-
-		}
-
-		return elimNode;
+		
 
 	}
 

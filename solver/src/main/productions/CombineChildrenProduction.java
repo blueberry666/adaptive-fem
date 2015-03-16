@@ -12,21 +12,21 @@ public class CombineChildrenProduction extends Production {
 	}
 
 	@Override
-	public void apply(Vertex vert) {
+	public void apply() {
 
-		for (Vertex child : vert.children) {
+		for (Vertex child : vertex.children) {
 			for (DOF d : child.getNotEliminatedDOFS()) {
-				int parentI = vert.rowDofs.indexOf(d);
+				int parentI = vertex.rowDofs.indexOf(d);
 				int childI = child.rowDofs.indexOf(d);
 				for (DOF d2 : child.getNotEliminatedDOFS()) {
 
-					int parentJ = vert.rowDofs.indexOf(d2);
+					int parentJ = vertex.rowDofs.indexOf(d2);
 
 					int childJ = child.rowDofs.indexOf(d2);
-					vert.A[parentI][parentJ] += child.A[childI][childJ];
+					vertex.A[parentI][parentJ] += child.A[childI][childJ];
 
 				}
-				vert.b[parentI] += child.b[childI];
+				vertex.b[parentI] += child.b[childI];
 			}
 		}
 

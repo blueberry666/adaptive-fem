@@ -12,7 +12,7 @@ public class GraphScheduler {
 	
 	
 		
-	public void findNodes(Set<Node> allNodes, Collection<Node> startNodes){
+	public void findNodes(Set<Node> allNodes, Collection<? extends Node> startNodes){
 		allNodes.addAll(startNodes);
 		for(Node node : startNodes){
 			findNodes(allNodes,node.getInNodes());
@@ -20,7 +20,9 @@ public class GraphScheduler {
 
 	}
 	
-	public List<List<Node>> schedule(Collection<Node> graph){
+	public List<List<Node>> schedule(Collection<? extends Node> graph){
+		Set<Node> allNodes = new HashSet<>();
+		findNodes(allNodes, graph);
 		List<List<Node>> groups = new LinkedList<>();
 		while (!graph.isEmpty()) {
 			List<Node> nodes = new LinkedList<>();
