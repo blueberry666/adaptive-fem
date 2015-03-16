@@ -20,9 +20,9 @@ public class GraphScheduler {
 
 	}
 	
-	public List<List<Node>> schedule(Collection<? extends Node> graph){
-		Set<Node> allNodes = new HashSet<>();
-		findNodes(allNodes, graph);
+	public List<List<Node>> schedule(Collection<? extends Node> starNodes){
+		Set<Node> graph = new HashSet<>();
+		findNodes(graph, starNodes);
 		List<List<Node>> groups = new LinkedList<>();
 		while (!graph.isEmpty()) {
 			List<Node> nodes = new LinkedList<>();
