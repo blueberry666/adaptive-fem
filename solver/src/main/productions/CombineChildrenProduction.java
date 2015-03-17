@@ -1,4 +1,5 @@
 package main.productions;
+import main.MatrixUtil;
 import main.tree.DOF;
 import main.tree.Vertex;
 
@@ -8,7 +9,6 @@ public class CombineChildrenProduction extends Production {
 
 	public CombineChildrenProduction(Vertex vert) {
 		super(vert);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -29,6 +29,9 @@ public class CombineChildrenProduction extends Production {
 				vertex.b[parentI] += child.b[childI];
 			}
 		}
+		System.out.println("matrix A in combine children");
+		MatrixUtil.printMatrix(vertex.A);
+		System.out.println();
 
 	}
 

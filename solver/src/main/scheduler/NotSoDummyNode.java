@@ -32,5 +32,10 @@ public class NotSoDummyNode implements Node {
 		inNodes.add(node);
 	}
 
+	public Production getProduction() {
+		return production;
+	}
+
+
 
 }

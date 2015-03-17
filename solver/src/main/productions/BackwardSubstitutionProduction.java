@@ -10,7 +10,6 @@ public class BackwardSubstitutionProduction extends Production{
 
 	public BackwardSubstitutionProduction(Vertex vert) {
 		super(vert);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

@@ -7,12 +7,10 @@ public class SolveRootProduction extends Production {
 
 	public SolveRootProduction(Vertex vert) {
 		super(vert);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void apply() {
-		// TODO Auto-generated method stubSystem.out.println("root b:");
 		MatrixUtil.printVector(vertex.b);
 		System.out.println();
 		vertex.x = MatrixUtil.gaussianElimination(vertex.A, vertex.b);

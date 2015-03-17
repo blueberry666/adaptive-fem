@@ -8,7 +8,6 @@ public class PartialEliminationProduction extends Production {
 
 	public PartialEliminationProduction(Vertex vert) {
 		super(vert);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
