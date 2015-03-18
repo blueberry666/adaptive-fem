@@ -14,7 +14,7 @@ public class Executor {
 	private CountDownLatch countDownLatch;
 	
 	public Executor(){
-		this.executorService = Executors.newFixedThreadPool(4);
+		this.executorService = Executors.newFixedThreadPool(1);
 	}
 	
 	public void beginStage(int productionCount){

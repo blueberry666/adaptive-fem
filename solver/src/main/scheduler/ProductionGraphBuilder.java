@@ -53,7 +53,9 @@ public class ProductionGraphBuilder {
 			return elimNode;
 		}else{
 			Production p = factory.makeProduction(root);
-			return new NotSoDummyNode("leaf", p);
+			NotSoDummyNode node = new NotSoDummyNode("leaf", p);
+			parent.addInNode(node);
+			return node;
 			
 		}
 		

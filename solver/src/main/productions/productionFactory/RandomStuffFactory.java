@@ -15,7 +15,6 @@ public class RandomStuffFactory implements ProductionFactory {
 			public void apply() {
 				vertex.A = MatrixUtil.generateRandomMatrix(vertex.A.length, vertex.A[0].length);
 				vertex.b = MatrixUtil.generateRandomVector(vertex.b.length);
-				
 			}
 		};
 	}
