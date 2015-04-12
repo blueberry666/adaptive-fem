@@ -15,7 +15,8 @@ public class Element2D extends Element {
 		super(id);
 	}
 
-	public void addFunction(DOF dof, double d0, double d1, double d2, double d3){
+	public void addFunction(DOF dof, double [] f){
+		localBasisFunctions.put(dof, f);
 		
 	}
 	

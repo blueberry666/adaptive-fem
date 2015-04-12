@@ -21,38 +21,38 @@ public class TestGridGenerator {
 		dofsToElems(dofs, elems);
 		
 		
-		elems[0].localBasisFunctions.put(dofs[0], new double[]{0,0,0,1});
-		elems[0].localBasisFunctions.put(dofs[1], new double[]{0,0,1,0});
-		elems[0].localBasisFunctions.put(dofs[3], new double[]{1,0,0,0});
-		elems[0].localBasisFunctions.put(dofs[4], new double[]{0,1,0,0});
+		elems[0].addFunction(dofs[0], new double[]{0,0,0,1});
+		elems[0].addFunction(dofs[1], new double[]{0,0,1,0});
+		elems[0].addFunction(dofs[3], new double[]{1,0,0,0});
+		elems[0].addFunction(dofs[4], new double[]{0,1,0,0});
 
-		elems[1].localBasisFunctions.put(dofs[1], new double[]{0,0,0,1});
-		elems[1].localBasisFunctions.put(dofs[2], new double[]{0,0,1,0});
-		elems[1].localBasisFunctions.put(dofs[4], new double[]{1,0,0,0});
-		elems[1].localBasisFunctions.put(dofs[5], new double[]{0,1,0,0});
+		elems[1].addFunction(dofs[1], new double[]{0,0,0,1});
+		elems[1].addFunction(dofs[2], new double[]{0,0,1,0});
+		elems[1].addFunction(dofs[4], new double[]{1,0,0,0});
+		elems[1].addFunction(dofs[5], new double[]{0,1,0,0});
 
-		elems[2].localBasisFunctions.put(dofs[3], new double[]{0,0,0,1});
-		elems[2].localBasisFunctions.put(dofs[4], new double[]{0,0,1,0});
-		elems[2].localBasisFunctions.put(dofs[8], new double[]{1,0,0,0});
-		elems[2].localBasisFunctions.put(dofs[9], new double[]{0,1,0,0});
+		elems[2].addFunction(dofs[3], new double[]{0,0,0,1});
+		elems[2].addFunction(dofs[4], new double[]{0,0,1,0});
+		elems[2].addFunction(dofs[8], new double[]{1,0,0,0});
+		elems[2].addFunction(dofs[9], new double[]{0,1,0,0});
 
-		elems[3].localBasisFunctions.put(dofs[4], new double[]{0.5,0,0.5,1});
-		elems[3].localBasisFunctions.put(dofs[6], new double[]{0,1,0,0});
+		elems[3].addFunction(dofs[4], new double[]{0.5,0,0.5,1});
+		elems[3].addFunction(dofs[6], new double[]{0,1,0,0});
 		
-		elems[4].localBasisFunctions.put(dofs[4], new double[]{0,0,0,0.5});
-		elems[4].localBasisFunctions.put(dofs[5], new double[]{0,0,1,0});
-		elems[4].localBasisFunctions.put(dofs[6], new double[]{1,0,0,0});
-		elems[4].localBasisFunctions.put(dofs[7], new double[]{0,1,0,0});
+		elems[4].addFunction(dofs[4], new double[]{0,0,0,0.5});
+		elems[4].addFunction(dofs[5], new double[]{0,0,1,0});
+		elems[4].addFunction(dofs[6], new double[]{1,0,0,0});
+		elems[4].addFunction(dofs[7], new double[]{0,1,0,0});
 		
-		elems[5].localBasisFunctions.put(dofs[4], new double[]{0,0,0,0.5});
-		elems[5].localBasisFunctions.put(dofs[6], new double[]{0,0,1,0});
-		elems[5].localBasisFunctions.put(dofs[9], new double[]{1,0,0,0});
-		elems[5].localBasisFunctions.put(dofs[10], new double[]{0,1,0,0});
+		elems[5].addFunction(dofs[4], new double[]{0,0,0,0.5});
+		elems[5].addFunction(dofs[6], new double[]{0,0,1,0});
+		elems[5].addFunction(dofs[9], new double[]{1,0,0,0});
+		elems[5].addFunction(dofs[10], new double[]{0,1,0,0});
 		
-		elems[6].localBasisFunctions.put(dofs[6], new double[]{0,0,0,1});
-		elems[6].localBasisFunctions.put(dofs[7], new double[]{0,0,1,0});
-		elems[6].localBasisFunctions.put(dofs[10], new double[]{1,0,0,0});
-		elems[6].localBasisFunctions.put(dofs[11], new double[]{0,1,0,0});
+		elems[6].addFunction(dofs[6], new double[]{0,0,0,1});
+		elems[6].addFunction(dofs[7], new double[]{0,0,1,0});
+		elems[6].addFunction(dofs[10], new double[]{1,0,0,0});
+		elems[6].addFunction(dofs[11], new double[]{0,1,0,0});
 
 
 	}
