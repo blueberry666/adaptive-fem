@@ -1,6 +1,5 @@
 package main;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +16,7 @@ import main.tree.DOF;
 import main.tree.TestTreeBuilder;
 import main.tree.TreeInitializer;
 import main.tree.Vertex;
+import main.utils.MatrixUtil;
 
 
 public class Application {

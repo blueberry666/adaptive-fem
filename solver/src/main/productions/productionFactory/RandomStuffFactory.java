@@ -1,8 +1,8 @@
 package main.productions.productionFactory;
 
-import main.MatrixUtil;
 import main.productions.Production;
 import main.tree.Vertex;
+import main.utils.MatrixUtil;
 
 public class RandomStuffFactory implements ProductionFactory {
 

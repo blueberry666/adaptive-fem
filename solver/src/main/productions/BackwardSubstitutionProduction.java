@@ -2,9 +2,9 @@ package main.productions;
 
 import java.util.Arrays;
 
-import main.MatrixUtil;
 import main.tree.DOF;
 import main.tree.Vertex;
+import main.utils.MatrixUtil;
 
 public class BackwardSubstitutionProduction extends Production{
 

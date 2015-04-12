@@ -2,7 +2,7 @@ package main.tree;
 import java.util.LinkedList;
 import java.util.List;
 
-import main.MatrixUtil;
+import main.utils.MatrixUtil;
 
 
 

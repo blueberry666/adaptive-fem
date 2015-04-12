@@ -1,5 +1,6 @@
 package main.tree;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -12,4 +13,16 @@ public class Element {
 		ID = id;
 	}
 
+	public void addDofs(List<DOF> dofsToAdd){
+		dofs.addAll(dofsToAdd);
+		for(DOF dof : dofsToAdd){
+			dof.elements.add(this);
+		}
+		
+	}
+	
+	public void addDof(DOF dof){
+		dofs.add(dof);
+		dof.elements.add(this);
+	}
 }

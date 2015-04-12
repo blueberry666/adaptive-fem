@@ -1,7 +1,7 @@
 package main.productions;
-import main.MatrixUtil;
 import main.tree.DOF;
 import main.tree.Vertex;
+import main.utils.MatrixUtil;
 
 
 
