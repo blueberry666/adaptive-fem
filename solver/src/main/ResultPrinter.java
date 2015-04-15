@@ -7,19 +7,22 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import org.math.plot.Plot2DPanel;
+import org.math.plot.Plot3DPanel;
 
 public class ResultPrinter {
 	
 	
 
 	private static final Plot2DPanel plot = new Plot2DPanel();
+	private static final Plot3DPanel plot2 = new Plot3DPanel();
+
     private static final JFrame frame = new JFrame("Plot panel");
 
     private static final Dimension SIZE = new Dimension(600, 400);
     
     static {
         plot.setPreferredSize(SIZE);
-        frame.add(plot);
+        frame.add(plot2);
         frame.pack();
         frame.setVisible(true);
     }
@@ -41,6 +44,23 @@ public class ResultPrinter {
 
 //        plot.removeAllPlots();
         plot.addLinePlot("my plot", x, y);
+	}
+	
+	public static void printResult(double [] x, double[] y, double[][]z){
+//		double []x = new double[z.length];
+//		double []y = new double[z.length];
+		for(int i=0;i<z.length;++i){
+			for(int j=0;j<y.length;++j){
+				x[i] = i/(double)(x.length);
+				y[j] = j/(double)(y.length);
+				z[i][j] = Math.atan2(x[i], y[j]);
+			}
+			
+		}
+		
+		plot2.removeAllPlots();
+		plot2.addGridPlot("sialal", x, y, z);
+		
 	}
         
 }

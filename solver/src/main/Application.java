@@ -72,6 +72,8 @@ public class Application {
 //			System.out.println("ID: "+e.getKey().ID+" = "+ e.getValue());
 //		}
 		
+		ResultPrinter.printResult(new double[10], new double[10], MatrixUtil.generateRandomMatrix(10, 10));
+		
 		
 	}
 	
