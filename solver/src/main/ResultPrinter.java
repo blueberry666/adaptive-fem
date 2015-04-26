@@ -49,14 +49,14 @@ public class ResultPrinter {
 	public static void printResult(double [] x, double[] y, double[][]z){
 //		double []x = new double[z.length];
 //		double []y = new double[z.length];
-		for(int i=0;i<z.length;++i){
-			for(int j=0;j<y.length;++j){
-				x[i] = i/(double)(x.length);
-				y[j] = j/(double)(y.length);
-				z[i][j] = Math.atan2(x[i], y[j]);
-			}
-			
-		}
+//		for(int i=0;i<z.length;++i){
+//			for(int j=0;j<y.length;++j){
+//				x[i] = i/(double)(x.length);
+//				y[j] = j/(double)(y.length);
+//				z[i][j] = Math.atan2(x[i], y[j]);
+//			}
+//			
+//		}
 		
 		plot2.removeAllPlots();
 		plot2.addGridPlot("sialal", x, y, z);

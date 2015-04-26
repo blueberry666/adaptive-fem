@@ -1,9 +1,14 @@
 package main.grid;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
+import main.ResultPrinter;
+import main.geometry.Basis2D;
 import main.tree.DOF;
 import main.tree.Element2D;
+import main.utils.Rectangle;
 
 public class TestGridGenerator {
 	
@@ -13,14 +18,51 @@ public class TestGridGenerator {
 		for(int i=0;i<12;++i){
 			dofs[i] = new DOF(i);
 		}
-		
+		Rectangle bigRectangle = new Rectangle(0, 1, 0, 1);
+		Rectangle [] recs = bigRectangle.breakRectangle();
 		Element2D [] elems = new Element2D[7];
 		for(int i=0;i<7;++i){
 			elems[i] = new Element2D(i);
 		}
+		elems[0].rectangle = recs[0];
+		elems[1].rectangle = recs[1];
+		elems[2].rectangle = recs[2];
+		recs = recs[3].breakRectangle();
+		elems[3].rectangle = recs[0];
+		elems[4].rectangle = recs[1];
+		elems[5].rectangle = recs[2];
+		elems[6].rectangle = recs[3];
+		
 		dofsToElems(dofs, elems);
 		
+		elemsAddFunctions(dofs, elems);
 		
+		Map<DOF, Double> map = new HashMap<>();
+		for(DOF d: dofs){
+			map.put(d, 0.0);
+		}
+		map.put(dofs[0], 1.0);
+		Basis2D.evaluate(0, 0, Arrays.asList(elems), map);
+		int size=10;
+		double []x = new double[size];
+		double []y = new double[size];
+		double [][]z = new double[size][size];
+		for(int i=0;i<z.length;++i){
+			for(int j=0;j<y.length;++j){
+				x[i] = i/(double)(x.length);
+				y[j] = j/(double)(y.length);
+				z[i][j] = Basis2D.evaluate(x[i], y[j], Arrays.asList(elems), map);
+			}
+			
+		}
+		ResultPrinter.printResult(x, y, z);
+		
+		
+
+
+	}
+
+	private static void elemsAddFunctions(DOF[] dofs, Element2D[] elems) {
 		elems[0].addFunction(dofs[0], new double[]{0,0,0,1});
 		elems[0].addFunction(dofs[1], new double[]{0,0,1,0});
 		elems[0].addFunction(dofs[3], new double[]{1,0,0,0});
@@ -53,8 +95,6 @@ public class TestGridGenerator {
 		elems[6].addFunction(dofs[7], new double[]{0,0,1,0});
 		elems[6].addFunction(dofs[10], new double[]{1,0,0,0});
 		elems[6].addFunction(dofs[11], new double[]{0,1,0,0});
-
-
 	}
 
 //	private static void elemsToDofs(DOF[] dofs, Element2D[] elems) {

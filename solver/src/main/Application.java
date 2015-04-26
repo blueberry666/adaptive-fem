@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import main.grid.TestGridGenerator;
 import main.productions.productionFactory.RandomStuffFactory;
 import main.scheduler.GraphScheduler;
 import main.scheduler.Node;
@@ -72,8 +73,8 @@ public class Application {
 //			System.out.println("ID: "+e.getKey().ID+" = "+ e.getValue());
 //		}
 		
-		ResultPrinter.printResult(new double[10], new double[10], MatrixUtil.generateRandomMatrix(10, 10));
-		
+
+		TestGridGenerator.makeTestGrid();
 		
 	}
 	
