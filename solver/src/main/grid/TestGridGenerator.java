@@ -24,14 +24,14 @@ public class TestGridGenerator {
 		for(int i=0;i<7;++i){
 			elems[i] = new Element2D(i);
 		}
-		elems[0].rectangle = recs[0];
-		elems[1].rectangle = recs[1];
-		elems[2].rectangle = recs[2];
-		recs = recs[3].breakRectangle();
-		elems[3].rectangle = recs[0];
-		elems[4].rectangle = recs[1];
-		elems[5].rectangle = recs[2];
-		elems[6].rectangle = recs[3];
+		elems[0].rectangle = recs[3];
+		elems[1].rectangle = recs[2];
+		elems[2].rectangle = recs[0];
+		recs = recs[1].breakRectangle();
+		elems[3].rectangle = recs[3];
+		elems[4].rectangle = recs[2];
+		elems[5].rectangle = recs[0];
+		elems[6].rectangle = recs[1];
 		
 		dofsToElems(dofs, elems);
 		

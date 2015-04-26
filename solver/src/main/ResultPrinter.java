@@ -21,7 +21,7 @@ public class ResultPrinter {
     private static final Dimension SIZE = new Dimension(600, 400);
     
     static {
-        plot.setPreferredSize(SIZE);
+        plot2.setPreferredSize(SIZE);
         frame.add(plot2);
         frame.pack();
         frame.setVisible(true);
