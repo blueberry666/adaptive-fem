@@ -12,4 +12,12 @@ public class Part {
 	public Part(int id){
 		this.id = id;
 	}
+	
+	public Edge getEdge(Direction d){
+		return edges[d.ordinal()];
+	}
+	
+	public void setEdge(Direction d, Edge e){
+		edges[d.ordinal()] = e;
+	}
 }

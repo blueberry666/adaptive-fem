@@ -1,7 +1,5 @@
 package main.generator;
 
-import main.generator.Neighborhood.Empty;
-import main.generator.Neighborhood.SinglePart;
 import main.utils.Rectangle;
 
 public class Generator {
@@ -12,42 +10,40 @@ public class Generator {
 		Part topPart = new Part(1);
 		Part bottomPart = new Part(2);
 		topPart.rectangle = broken[0];
-		topPart.edges[Direction.TOP.ordinal()] = parent.edges[Direction.TOP.ordinal()];
 		Neighborhood topPartN = doPart(topPart, parent, Direction.TOP);
-		Edge top = parent.edges[Direction.TOP.ordinal()];
+		Edge top = parent.getEdge(Direction.TOP);
 		top.setNeighborhood(Direction.BOTTOM, topPartN);
-		topPart.edges[Direction.TOP.ordinal()] = top;
+		topPart.setEdge(Direction.TOP,top);
 		
 		bottomPart.rectangle = broken[1];
-		bottomPart.edges[Direction.BOTTOM.ordinal()] = parent.edges[Direction.BOTTOM.ordinal()];
 		Neighborhood bottomPartN = doPart(bottomPart, parent, Direction.BOTTOM);
-		Edge bottom = parent.edges[Direction.BOTTOM.ordinal()];
+		Edge bottom = parent.getEdge(Direction.BOTTOM);
 		bottom.setNeighborhood(Direction.TOP, bottomPartN);
-		bottomPart.edges[Direction.BOTTOM.ordinal()] = bottom;
+		bottomPart.setEdge(Direction.BOTTOM,bottom);
 		
-		Edge parentLeft = parent.edges[Direction.LEFT.ordinal()];
+		Edge parentLeft = parent.getEdge(Direction.LEFT);
 		if(!(parentLeft.getNeighborhood(Direction.LEFT) instanceof Neighborhood.Empty)){
 			parentLeft.setNeighborhood(
 					Direction.RIGHT,
 					new Neighborhood.TwoEdge(
-							topPart.edges[Direction.LEFT.ordinal()], 
-							bottomPart.edges[Direction.LEFT.ordinal()]));
+							topPart.getEdge(Direction.LEFT), 
+							bottomPart.getEdge(Direction.LEFT)));;
 		}
 		Edge parentRight = parent.edges[Direction.RIGHT.ordinal()];
 		if(!(parentRight.getNeighborhood(Direction.RIGHT) instanceof Neighborhood.Empty)){
 			parentRight.setNeighborhood(
 					Direction.LEFT,
 					new Neighborhood.TwoEdge(
-							topPart.edges[Direction.RIGHT.ordinal()], 
-							bottomPart.edges[Direction.RIGHT.ordinal()]));
+							topPart.getEdge(Direction.RIGHT), 
+							bottomPart.getEdge(Direction.RIGHT)));
 		}
-		
+
 		Edge betweenEdge = new Edge();
 		betweenEdge.setNeighborhood(Direction.TOP, topPartN);
 		betweenEdge.setNeighborhood(Direction.BOTTOM, bottomPartN);
-		topPart.edges[Direction.BOTTOM.ordinal()] = betweenEdge;
-		bottomPart.edges[Direction.TOP.ordinal()] = betweenEdge;
-		
+		topPart.setEdge(Direction.BOTTOM, betweenEdge);
+		bottomPart.setEdge(Direction.TOP, betweenEdge);
+
 		return new Part[]{topPart, bottomPart};
 	}
 
@@ -58,20 +54,27 @@ public class Generator {
 		return partN;
 	}
 
-	private void makeSide(Part part, Part parent, Neighborhood partN, Direction leftOrRight, Direction topBottom) {
+	private void makeSide(Part part, Part parent, Neighborhood partN,
+			Direction leftOrRight, Direction topBottom) {
 		Edge right = new Edge();
-		Edge parentRgiht = parent.edges[leftOrRight.ordinal()];
+		Edge parentRgiht = parent.getEdge(leftOrRight);
 
-		if(parentRgiht.getNeighborhood(leftOrRight) instanceof Neighborhood.Empty){
+		Neighborhood parentEdgeNeighborhood = parentRgiht.getNeighborhood(leftOrRight);
+		if (parentEdgeNeighborhood instanceof Neighborhood.Empty) {
 			right.setNeighborhood(leftOrRight, new Neighborhood.Empty());
-		}else if(parentRgiht.getNeighborhood(leftOrRight) instanceof Neighborhood.TwoEdge){
-			part.edges[leftOrRight.ordinal()] = ((Neighborhood.TwoEdge)parentRgiht.getNeighborhood(leftOrRight)).getEdge(topBottom);
-		}
-		else{
-			right.setNeighborhood(leftOrRight, new Neighborhood.OneEdge(parentRgiht));
+		} else if (parentEdgeNeighborhood instanceof Neighborhood.TwoEdge) {
+			part.setEdge(leftOrRight, ((Neighborhood.TwoEdge) parentEdgeNeighborhood).getEdge(topBottom));
+			part.getEdge(leftOrRight).setNeighborhood(
+					Direction.opposite(leftOrRight),
+					new Neighborhood.SinglePart(part));
+		} else if (parentEdgeNeighborhood instanceof Neighborhood.OneEdge) {
+			throw new RuntimeException("You fucked up! You cannot do that! Only one level of breaking is available!");
+		} else {
+			right.setNeighborhood(leftOrRight, new Neighborhood.OneEdge(
+					parentRgiht));
 		}
 		right.setNeighborhood(Direction.opposite(leftOrRight), partN);
-		part.edges[leftOrRight.ordinal()] = right;
+		part.setEdge(leftOrRight,right);
 	}
 
 	
