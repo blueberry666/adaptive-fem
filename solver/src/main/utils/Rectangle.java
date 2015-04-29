@@ -37,5 +37,14 @@ public class Rectangle {
 		return rec;
 
 	}
+	
+	public Rectangle [] breakHorizontal(){
+		Rectangle [] rec = new Rectangle[2];
+		double midY = (y0+y1)/2;
+		rec[0] = new Rectangle(x0, x1, y0, midY);
+		rec[1] = new Rectangle(x0, x1, midY, y1);
+
+		return rec;
+	}
 
 }
