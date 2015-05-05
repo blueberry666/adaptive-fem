@@ -6,6 +6,13 @@ public class Edge {
 	public Neighborhood bottomOrLeft;
 	
 	
+	public Edge(Neighborhood topOrRight, Neighborhood bottomOrLeft) {
+		this.topOrRight = topOrRight;
+        this.bottomOrLeft = bottomOrLeft;
+	}
+	
+	public Edge(){}
+
 	public Neighborhood getNeighborhood(Direction d){
 		switch (d) {
 		case BOTTOM:
@@ -29,5 +36,10 @@ public class Edge {
 			topOrRight = n;
 		}
 	}
+	
+	@Override
+    public String toString() {
+           return String.format("Edge[id=%d](topright=%s, botleft=%s)", hashCode(), topOrRight, bottomOrLeft);
+    }
 
 }

@@ -3,12 +3,14 @@ package main.generator;
 import main.utils.Rectangle;
 
 public class Generator {
+	
+	private int nextId;
 
 	public Part[] breakHorizontal(Part parent) {
 		Rectangle[] broken = parent.rectangle.breakHorizontal();
 
-		Part topPart = new Part(1);
-		Part bottomPart = new Part(2);
+		Part topPart = new Part(getNextId());
+		Part bottomPart = new Part(getNextId());
 		topPart.rectangle = broken[1];
 		Neighborhood topPartN = doPart(topPart, parent, Direction.TOP);
 		Edge top = parent.getEdge(Direction.TOP);
@@ -52,29 +54,29 @@ public class Generator {
 
 	private void makeSide(Part part, Part parent, Neighborhood partN,
 			Direction leftOrRight, Direction topBottom) {
-		Edge newEdge = new Edge();
+		Edge edge = new Edge();
 		Edge parentEdge = parent.getEdge(leftOrRight);
 
 		Neighborhood parentEdgeNeighborhood = parentEdge
 				.getNeighborhood(leftOrRight);
 		if (parentEdgeNeighborhood instanceof Neighborhood.Empty) {
-			newEdge.setNeighborhood(leftOrRight, new Neighborhood.Empty());
+			edge.setNeighborhood(leftOrRight, new Neighborhood.Empty());
 		} else if (parentEdgeNeighborhood instanceof Neighborhood.TwoEdge) {
-			part.setEdge(leftOrRight,
-					((Neighborhood.TwoEdge) parentEdgeNeighborhood)
-							.getEdge(topBottom));
-			part.getEdge(leftOrRight).setNeighborhood(
-					Direction.opposite(leftOrRight),
-					new Neighborhood.SinglePart(part));
+
+			edge = ((Neighborhood.TwoEdge) parentEdgeNeighborhood).getEdge(topBottom);
 		} else if (parentEdgeNeighborhood instanceof Neighborhood.OneEdge) {
 			throw new RuntimeException(
 					"You fucked up! You cannot do that! Only one level of breaking is available!");
 		} else {
-			newEdge.setNeighborhood(leftOrRight, new Neighborhood.OneEdge(
+			edge.setNeighborhood(leftOrRight, new Neighborhood.OneEdge(
 					parentEdge));
 		}
-		newEdge.setNeighborhood(Direction.opposite(leftOrRight), partN);
-		part.setEdge(leftOrRight, newEdge);
+		edge.setNeighborhood(Direction.opposite(leftOrRight), partN);
+		part.setEdge(leftOrRight, edge);
+	}
+	
+	public int getNextId(){
+		return nextId++;
 	}
 
 }

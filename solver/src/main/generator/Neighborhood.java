@@ -7,6 +7,12 @@ public interface Neighborhood {
 		public Empty(){
 			
 		}
+		
+		 @Override
+         public String toString() {
+                return "Empty";
+         }
+         
 	}
 	
 	class SinglePart implements Neighborhood{
@@ -17,6 +23,12 @@ public interface Neighborhood {
 			part = p;
 		}
 		
+		@Override
+        public String toString() {
+               return String.format("SinglePart(id=%d)", part.id);
+        }
+        
+		
 	}
 	
 	class OneEdge implements Neighborhood{
@@ -26,6 +38,12 @@ public interface Neighborhood {
 		public OneEdge(Edge e){
 			edge = e;
 		}
+		
+		@Override
+        public String toString() {
+               return String.format("OneEdge(id=%d)", edge.hashCode());
+        }
+        
 		
 	}
 	
@@ -51,5 +69,10 @@ public interface Neighborhood {
 			return null;
 
 		}
+		
+		@Override
+        public String toString() {
+               return String.format("TwoEdges(topright=%d, leftbottom=%d)", topOrRight.hashCode(), bottomOrLeft.hashCode());
+        }
 	}
 }
