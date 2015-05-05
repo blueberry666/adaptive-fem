@@ -9,13 +9,13 @@ public class Generator {
 
 		Part topPart = new Part(1);
 		Part bottomPart = new Part(2);
-		topPart.rectangle = broken[0];
+		topPart.rectangle = broken[1];
 		Neighborhood topPartN = doPart(topPart, parent, Direction.TOP);
 		Edge top = parent.getEdge(Direction.TOP);
 		top.setNeighborhood(Direction.BOTTOM, topPartN);
 		topPart.setEdge(Direction.TOP, top);
 
-		bottomPart.rectangle = broken[1];
+		bottomPart.rectangle = broken[0];
 		Neighborhood bottomPartN = doPart(bottomPart, parent, Direction.BOTTOM);
 		Edge bottom = parent.getEdge(Direction.BOTTOM);
 		bottom.setNeighborhood(Direction.TOP, bottomPartN);
@@ -36,11 +36,10 @@ public class Generator {
 	private void addTwoEdgeNeighborhood(Part parent, Part topPart,
 			Part bottomPart, Direction direction) {
 		Edge parentEdge = parent.getEdge(direction);
-		if (!(parentEdge.getNeighborhood(direction) instanceof Neighborhood.Empty)) {
+		if (parentEdge.getNeighborhood(direction) instanceof Neighborhood.SinglePart) {
 			parentEdge.setNeighborhood(Direction.opposite(direction),
 					new Neighborhood.TwoEdge(topPart.getEdge(direction),
 							bottomPart.getEdge(direction)));
-			
 		}
 	}
 

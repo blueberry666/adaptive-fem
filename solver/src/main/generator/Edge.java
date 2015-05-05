@@ -23,6 +23,7 @@ public class Edge {
 		case BOTTOM:
 		case LEFT:
 			bottomOrLeft = n;
+			break;
 		case TOP:
 		case RIGHT:
 			topOrRight = n;
