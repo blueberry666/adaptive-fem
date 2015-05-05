@@ -46,5 +46,14 @@ public class Rectangle {
 
 		return rec;
 	}
+	
+	public Rectangle [] breakVertical(){
+		Rectangle [] rec = new Rectangle[2];
+		double midX = (x0+x1)/2;
+		rec[0] = new Rectangle(x0, midX, y0, y1);
+		rec[1] = new Rectangle(midX, x1, y0, y1);
+
+		return rec;
+	}
 
 }
