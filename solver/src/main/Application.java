@@ -1,5 +1,6 @@
 package main;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import main.generator.BreakType;
 import main.generator.Direction;
 import main.generator.Edge;
 import main.generator.Generator;
@@ -81,12 +83,22 @@ public class Application {
 		
 //
 //		TestGridGenerator.makeTestGrid();
-		generate();
+		generate2();
+		
+		
+	}
+	
+	private static void generate2(){
+		Generator gen = new Generator(0, 1, 0, 1);
+		Part [] parts1 = gen.breakPart(new ArrayList<>(), BreakType.CROSS);
+		for(Part p : parts1){
+			print(p);
+		}
 		
 	}
 	
 	private static void generate() {
-		Generator gen = new Generator();
+		Generator gen = new Generator(1,1,1,1);
 		Rectangle r = new Rectangle(0, 1, 0, 1);
 		Rectangle r2 = new Rectangle(1, 2, 0, 1);
 		Part p = new Part(7);
@@ -108,16 +120,16 @@ public class Application {
 		p2.setEdge(Direction.BOTTOM, new Edge(n2, empty));
 		p2.setEdge(Direction.RIGHT, new Edge(empty, n2));
 
-		Part[] parts = gen.breakHorizontal(p);
-		Part[] parts2 = gen.breakHorizontal(p2);
-		for (Part pr : parts) {
-			print(pr);
-			System.out.println();
-		}
-		for (Part pr : parts2) {
-			print(pr);
-			System.out.println();
-		}
+//		Part[] parts = gen.breakHorizontal(p);
+//		Part[] parts2 = gen.breakHorizontal(p2);
+//		for (Part pr : parts) {
+//			print(pr);
+//			System.out.println();
+//		}
+//		for (Part pr : parts2) {
+//			print(pr);
+//			System.out.println();
+//		}
 		// print(p2);
 	}
 

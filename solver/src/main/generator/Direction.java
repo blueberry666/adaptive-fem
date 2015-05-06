@@ -21,4 +21,34 @@ public enum Direction {
 		}
 		return null;
 	}
+	
+	public static Direction next(Direction d){
+		switch (d) {
+		case LEFT:
+			return BOTTOM;
+		case RIGHT:
+			return TOP;
+		case TOP:
+			return LEFT;
+		case BOTTOM:
+			return RIGHT;
+
+		}
+		return null;
+	}
+	
+	public static Direction prev(Direction d){
+		switch (d) {
+		case LEFT:
+			return TOP;
+		case RIGHT:
+			return BOTTOM;
+		case TOP:
+			return RIGHT;
+		case BOTTOM:
+			return LEFT;
+
+		}
+		return null;
+	}
 }

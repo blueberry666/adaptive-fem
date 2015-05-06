@@ -1,12 +1,72 @@
 package main.generator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import main.utils.Rectangle;
 
 public class Generator {
 	
 	private int nextId;
+	private Part root;
+	
+	public Generator(double x0, double x1, double y0, double y1){
+		Part root = new Part(getNextId());
+		root.rectangle = new Rectangle(x0, x1, y0, y1);
+		this.root = root;
+		for(Direction d : Direction.values()){
+			Edge e = new Edge();
+			e.setNeighborhood(d, new Neighborhood.Empty());
+			e.setNeighborhood(Direction.opposite(d), new Neighborhood.SinglePart(root));
+			root.setEdge(d, e);
+		}
+	}
 
-	public Part[] breakHorizontal(Part parent) {
+	public Part[] breakPart(List<Integer> path, BreakType breakType) {
+		Part parent = getPartByPath(path);
+		if (!parent.children.isEmpty()) {
+			throw new RuntimeException("Part already broken!!!");
+		}
+		Part[] broken = null;
+		switch (breakType) {
+		case CROSS:
+			broken = breakCross(parent);
+			break;
+		case HORIZONTAL:
+			broken = breakHorizontal(parent);
+			break;
+		case VERTICAL:
+			broken = breakVertical(parent);
+			break;
+		}
+		parent.children.addAll(Arrays.asList(broken));
+		return broken;
+	}
+	
+	
+	private Part getPartByPath(List<Integer> path){
+		if(path.isEmpty()){
+			return root;
+		}
+		Part part = root;
+		for(Integer i : path){
+			part = part.children.get(i);
+		}
+		return part;
+	}
+	//topLeft, topRight, bottomLeft, bottomRight
+	private Part[] breakCross(Part parent){
+		Part[] brokenH = breakHorizontal(parent);
+		List<Part> result = new ArrayList<>();
+		result.addAll(Arrays.asList(breakVertical(brokenH[0])));
+		result.addAll(Arrays.asList(breakVertical(brokenH[1])));
+		parent.children.addAll(result);
+		return result.toArray(new Part[4]);
+		
+	}
+	//top bottom
+	private Part[] breakHorizontal(Part parent) {
 		Rectangle[] broken = parent.rectangle.breakHorizontal();
 
 		Part topPart = new Part(getNextId());
@@ -34,7 +94,7 @@ public class Generator {
 
 		return new Part[] { topPart, bottomPart };
 	}
-	
+	//left right
 	private Part[] breakVertical(Part parent){
 		Rectangle [] broken = parent.rectangle.breakVertical();
 		Part leftPart = new Part(getNextId());
@@ -52,8 +112,8 @@ public class Generator {
 		right.setNeighborhood(Direction.LEFT, rightPartN);
 		rightPart.setEdge(Direction.RIGHT, right);
 
-		addTwoEdgeNeighborhood(parent, leftPart, rightPart, Direction.TOP);
-		addTwoEdgeNeighborhood(parent, leftPart, rightPart, Direction.BOTTOM);
+		addTwoEdgeNeighborhood(parent, rightPart, leftPart, Direction.TOP);
+		addTwoEdgeNeighborhood(parent, rightPart, leftPart, Direction.BOTTOM);
 
 		Edge betweenEdge = new Edge();
 		betweenEdge.setNeighborhood(Direction.LEFT, leftPartN);
@@ -61,17 +121,17 @@ public class Generator {
 		leftPart.setEdge(Direction.RIGHT, betweenEdge);
 		rightPart.setEdge(Direction.LEFT, betweenEdge);
 
-		return new Part[] { rightPart, leftPart };
+		return new Part[] { leftPart, rightPart };
 		
 	}
 
-	private void addTwoEdgeNeighborhood(Part parent, Part topPart,
-			Part bottomPart, Direction direction) {
+	private void addTwoEdgeNeighborhood(Part parent, Part topRight,
+			Part bottomLeft, Direction direction) {
 		Edge parentEdge = parent.getEdge(direction);
 		if (parentEdge.getNeighborhood(direction) instanceof Neighborhood.SinglePart) {
 			parentEdge.setNeighborhood(Direction.opposite(direction),
-					new Neighborhood.TwoEdge(topPart.getEdge(direction),
-							bottomPart.getEdge(direction)));
+					new Neighborhood.TwoEdge(topRight.getEdge(direction),
+							bottomLeft.getEdge(direction)));
 		}
 	}
 

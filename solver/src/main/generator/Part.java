@@ -1,5 +1,8 @@
 package main.generator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import main.utils.Rectangle;
 
 public class Part {
@@ -7,6 +10,7 @@ public class Part {
 	public int id;
 	public Rectangle rectangle;
 	public Edge [] edges = new Edge[4];
+	public List<Part> children = new ArrayList<>();
 
 	
 	public Part(int id){

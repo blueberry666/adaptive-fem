@@ -1,5 +1,8 @@
 package main.utils;
 
+import main.generator.Corner;
+import main.generator.Direction;
+
 public class Rectangle {
 	
 	public double x0;
@@ -55,5 +58,36 @@ public class Rectangle {
 
 		return rec;
 	}
+	
+	public Point getPoint(Corner c){
+		switch(c){
+		case LB:
+			return new Point(x0,y0);
+		case RB:
+			return new Point(x1,y0);
+		case LT:
+			return new Point(x0,y1);
+		case RT:
+			return new Point(x1,y1);
+		}
+		return null;
+	}
+	
+	public double getBound(Direction d){
+		switch (d) {
+		case LEFT:
+			return x0;
+		case RIGHT:
+			return x1;
+		case TOP:
+			return y1;
+		case BOTTOM:
+			return y0;
+
+		}
+		return 0;
+	}
+	
+	
 
 }
