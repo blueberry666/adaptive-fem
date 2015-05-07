@@ -2,10 +2,11 @@ package main.generator;
 
 public enum Corner {
 	
-	LT,
-	RT,
 	LB,
-	RB;
+	RB,
+	RT,
+	LT;
+	
 	
 	public static Direction[] getDirections(Corner c){
 		switch(c){
