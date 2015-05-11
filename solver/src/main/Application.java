@@ -36,64 +36,74 @@ public class Application {
 //		Vertex root = builder.buildTree(4);
 //		TreeInitializer.visit(root);
 //		builder.printTree("",root);
-//		
-//		ProductionGraphBuilder graphBuilder = new ProductionGraphBuilder(new RandomStuffFactory());
-//		
-//		
-//		GraphScheduler scheduler = new GraphScheduler();
-//		Set<? extends Node> graph = graphBuilder.makeGraph(root);
-//		List<List<Node>> scheduledNodes = scheduler.schedule(graph);
-//		Executor executor = new Executor();
-//		int idx=0;
-//		Map<DOF,Double> gausianElimResult = null;
-//		for(List<Node> nodes : scheduledNodes){
-//			System.out.println();
-//			executor.beginStage(nodes.size());
-//			for(Node n : nodes){
-//				System.out.print(n.getName() + "  ");
-//				executor.submitProduction(((NotSoDummyNode)n).getProduction());
-//				
-//			}
-//			executor.waitForEnd();
-//			if(idx==1){
-//				gausianElimResult = gatherMatrix(root);
-//			}
-//			++idx;
-//		}
-//		
-//		executor.shutdown();
-//		Map<DOF, Double> result = new TreeMap<>();
-//		
-//		Set<Vertex> leaves = new HashSet<>();
-//		getLeaves(leaves, root);
-//		for(Vertex v : leaves){
-//			for(int i=0;i<v.rowDofs.size();++i){
-//				result.put(v.rowDofs.get(i), v.x[i]);
-//			}
-//		}
-//		
-//		System.out.println();
-//		for(Entry<DOF, Double> e : result.entrySet()){
-//			System.out.println("ID: "+e.getKey().ID+" = "+ e.getValue() + "     " + gausianElimResult.get(e.getKey()));
-//		}
+		Vertex root = 		generate2();
+
+		ProductionGraphBuilder graphBuilder = new ProductionGraphBuilder(new RandomStuffFactory());
 		
-//		for(Entry<DOF, Double> e : gausianElimResult.entrySet()){
-//			System.out.println("ID: "+e.getKey().ID+" = "+ e.getValue());
-//		}
+		
+		GraphScheduler scheduler = new GraphScheduler();
+		Set<? extends Node> graph = graphBuilder.makeGraph(root);
+		List<List<Node>> scheduledNodes = scheduler.schedule(graph);
+		Executor executor = new Executor();
+		int idx=0;
+		Map<DOF,Double> gausianElimResult = null;
+		for(List<Node> nodes : scheduledNodes){
+			System.out.println();
+			executor.beginStage(nodes.size());
+			for(Node n : nodes){
+				System.out.print(n.getName() + "  ");
+				executor.submitProduction(((NotSoDummyNode)n).getProduction());
+				
+			}
+			executor.waitForEnd();
+			if(idx==1){
+				gausianElimResult = gatherMatrix(root);
+			}
+			++idx;
+		}
+		
+		executor.shutdown();
+		Map<DOF, Double> result = new TreeMap<>();
+		
+		Set<Vertex> leaves = new HashSet<>();
+		getLeaves(leaves, root);
+		for(Vertex v : leaves){
+			for(int i=0;i<v.rowDofs.size();++i){
+				result.put(v.rowDofs.get(i), v.x[i]);
+			}
+		}
+		
+		System.out.println();
+		for(Entry<DOF, Double> e : result.entrySet()){
+			System.out.println("ID: "+e.getKey().ID+" = "+ e.getValue() + "     " + gausianElimResult.get(e.getKey()));
+		}
+		
+		for(Entry<DOF, Double> e : gausianElimResult.entrySet()){
+			System.out.println("ID: "+e.getKey().ID+" = "+ e.getValue());
+		}
 		
 //
 //		TestGridGenerator.makeTestGrid();
-		generate2();
+		
 		
 		
 	}
 	
-	private static void generate2(){
+	private static Vertex generate2(){
 		Generator gen = new Generator(0, 1, 0, 1);
 		Part [] parts1 = gen.breakPart(new ArrayList<>(), BreakType.CROSS);
+		Part [] parts2 = gen.breakPart(Arrays.asList(1), BreakType.CROSS);
 		for(Part p : parts1){
 			print(p);
 		}
+		for(Part p : parts2){
+			print(p);
+		}
+		Vertex root = gen.buildEliminationTree();
+		TreeInitializer.visit(root);
+		TestTreeBuilder.printTree("", root);
+		return root;
+		
 		
 	}
 	

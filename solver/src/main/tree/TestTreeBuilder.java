@@ -13,7 +13,7 @@ public class TestTreeBuilder {
 		return makeTree(0, size-1, 0, size-1);
 	}
 	
-	public void printTree(String cus, Vertex v){
+	public static void printTree(String cus, Vertex v){
 		System.out.println(cus + "children size: " + v.children.size());
 		System.out.print(cus + "DOFS: ");
 		for(DOF d : v.rowDofs){
