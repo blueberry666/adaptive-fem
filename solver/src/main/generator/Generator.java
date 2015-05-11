@@ -82,7 +82,6 @@ public class Generator {
 		List<Part> result = new ArrayList<>();
 		result.addAll(Arrays.asList(breakVertical(brokenH[0])));
 		result.addAll(Arrays.asList(breakVertical(brokenH[1])));
-		parent.children.addAll(result);
 		return result.toArray(new Part[4]);
 
 	}

@@ -43,7 +43,7 @@ public class DOFGenerator {
 
 					}
 				}
-				if(!free){
+				if(free){
 					DOF dof = getDof(wtfPoint);
 					getDofArray(dofMap, dof)[c.ordinal()] = 1;
 				}
@@ -52,7 +52,7 @@ public class DOFGenerator {
 			Element2D elem = new Element2D(getNextElemId());
 			elem.rectangle = parent.rectangle;
 			for(DOF d : dofMap.keySet()){
-				elem.dofs.add(d);
+				elem.addDof(d);
 				elem.localBasisFunctions.put(d, dofMap.get(d));
 			}
 			elementToPart.put(parent, elem);
