@@ -32,7 +32,7 @@ public class DOFGenerator {
 						Part sPart = singlePart.part;
 						Point[] points = getEdgeVertices(sPart.rectangle, Direction.opposite(d));
 						wtfPoint = parent.rectangle.getPoint(c);
-						if(wtfPoint.equals(points[0]) || wtfPoint.equals(points[1])){
+						if(!wtfPoint.equals(points[0]) && !wtfPoint.equals(points[1])){
 							for(Point point : points){
 								DOF dof = getDof(point);
 								getDofArray(dofMap, dof)[c.ordinal()] = 0.5;
