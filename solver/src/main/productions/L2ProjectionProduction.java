@@ -36,12 +36,12 @@ public class L2ProjectionProduction extends Production {
 					double chujnia = Basis2D.evaluateDOF(xt, yt,
 							element.localBasisFunctions.get(vertex.rowDofs
 									.get(dofIdx)));
-					vertex.b[dofIdx] = w/4*wartosc*chujnia;
+					vertex.b[dofIdx] += w/4*wartosc*chujnia;
 					for (int dofIdx2 = 0; dofIdx2 < vertex.rowDofs.size(); ++dofIdx2) {
 						double chujnia2 = Basis2D.evaluateDOF(xt, yt,
 								element.localBasisFunctions.get(vertex.rowDofs
 										.get(dofIdx2)));
-						vertex.A[dofIdx][dofIdx2] = w / 4 * chujnia * chujnia2;
+						vertex.A[dofIdx][dofIdx2] += w / 4 * chujnia * chujnia2;
 					}
 
 				}
@@ -52,8 +52,9 @@ public class L2ProjectionProduction extends Production {
 				
 	}
 	
-	private double chujoza(double x, double y){
-		return 5;// Math.atan2(x, y);
+	private double chujoza(double x, double y) {
+		double a = Math.max(Math.abs(x - 0.5), Math.abs(y - 0.5));
+		return 1 - 4 * a * a;
 	}
 	
 
