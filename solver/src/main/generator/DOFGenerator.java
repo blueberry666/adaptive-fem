@@ -21,18 +21,18 @@ public class DOFGenerator {
 		for(Part parent : grid){
 			Map<DOF,double[]> dofMap = new HashMap<>();
 			for(Corner c : Corner.values()){
-				Point wtfPoint = null;
+				Point cornerPoint = null;
 				Direction[] directions = Corner.getDirections(c);
 				boolean free = true;
 				for(Direction d : directions){
 					Neighborhood n = parent.getEdge(d).getNeighborhood(d);
+					cornerPoint = parent.rectangle.getPoint(c);
 					if(n instanceof Neighborhood.OneEdge){
 						Neighborhood.OneEdge oneEdge = (Neighborhood.OneEdge)n;
 						Neighborhood.SinglePart singlePart = (Neighborhood.SinglePart)oneEdge.edge.getNeighborhood(d);
 						Part sPart = singlePart.part;
 						Point[] points = getEdgeVertices(sPart.rectangle, Direction.opposite(d));
-						wtfPoint = parent.rectangle.getPoint(c);
-						if(!wtfPoint.equals(points[0]) && !wtfPoint.equals(points[1])){
+						if(!cornerPoint.equals(points[0]) && !cornerPoint.equals(points[1])){
 							for(Point point : points){
 								DOF dof = getDof(point);
 								getDofArray(dofMap, dof)[c.ordinal()] = 0.5;
@@ -44,7 +44,7 @@ public class DOFGenerator {
 					}
 				}
 				if(free){
-					DOF dof = getDof(wtfPoint);
+					DOF dof = getDof(cornerPoint);
 					getDofArray(dofMap, dof)[c.ordinal()] = 1;
 				}
 				

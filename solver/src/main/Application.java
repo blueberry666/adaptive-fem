@@ -1,6 +1,7 @@
 package main;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,12 +16,14 @@ import main.generator.Generator;
 import main.generator.Neighborhood;
 import main.generator.Part;
 import main.grid.TestGridGenerator;
+import main.productions.productionFactory.L2ProjectionFactory;
 import main.productions.productionFactory.RandomStuffFactory;
 import main.scheduler.GraphScheduler;
 import main.scheduler.Node;
 import main.scheduler.NotSoDummyNode;
 import main.scheduler.ProductionGraphBuilder;
 import main.tree.DOF;
+import main.tree.Element2D;
 import main.tree.TestTreeBuilder;
 import main.tree.TreeInitializer;
 import main.tree.Vertex;
@@ -36,9 +39,9 @@ public class Application {
 //		Vertex root = builder.buildTree(4);
 //		TreeInitializer.visit(root);
 //		builder.printTree("",root);
-		Vertex root = 		generate2();
+		Vertex root = generate2();
 
-		ProductionGraphBuilder graphBuilder = new ProductionGraphBuilder(new RandomStuffFactory());
+		ProductionGraphBuilder graphBuilder = new ProductionGraphBuilder(new L2ProjectionFactory());
 		
 		
 		GraphScheduler scheduler = new GraphScheduler();
@@ -82,6 +85,9 @@ public class Application {
 			System.out.println("ID: "+e.getKey().ID+" = "+ e.getValue());
 		}
 		
+		ResultPrinter.printResult(gatherElements(leaves), result);
+		
+		
 //
 //		TestGridGenerator.makeTestGrid();
 		
@@ -105,6 +111,14 @@ public class Application {
 		return root;
 		
 		
+	}
+	
+	private static List<Element2D> gatherElements(Collection<Vertex> leaves){
+		List<Element2D> elements = new ArrayList<>();
+		for(Vertex v : leaves){
+			elements.add((Element2D)v.element);
+		}
+		return elements;
 	}
 	
 	private static void generate() {

@@ -17,6 +17,14 @@ public class Basis2D {
 		return (x-x0)/(x1-x0);
 	}
 	
+	public static double evaluateDOF(double x, double y, double[] coeffs) {
+		double ret = 0;
+		for (int i = 0; i < 4; ++i) {
+			ret += coeffs[i] * Basis2D.shapeFunctions[i].eval(x, y);
+		}
+		return ret;
+	}
+	
 	private static double evaluate(double x, double y, Element2D element, Map<DOF, Double> map){
 		double ret = 0;
 		for(DOF dof: element.dofs){
@@ -34,6 +42,8 @@ public class Basis2D {
 		return ret;
 		
 	}
+	
+	
 	
 	private static Element2D findElementForPoint(double x, double y, Collection<Element2D> elemList){
 		

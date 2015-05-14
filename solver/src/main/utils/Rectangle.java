@@ -88,6 +88,10 @@ public class Rectangle {
 		return 0;
 	}
 	
+	public double getArea(){
+		return (x1-x0)*(y1-y0);
+	}
+	
 	
 
 }
