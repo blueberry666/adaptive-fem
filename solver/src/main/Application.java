@@ -2,9 +2,12 @@ package main;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
@@ -39,7 +42,9 @@ public class Application {
 //		Vertex root = builder.buildTree(4);
 //		TreeInitializer.visit(root);
 //		builder.printTree("",root);
-		Vertex root = generate2();
+		Vertex root = generateMesh();
+		
+		
 
 		ProductionGraphBuilder graphBuilder = new ProductionGraphBuilder(new L2ProjectionFactory());
 		
@@ -113,6 +118,69 @@ public class Application {
 		
 	}
 	
+	
+	private static Vertex generateMesh(){
+		Generator gen = new Generator(0, 1, 0, 1);
+		generateMesh1(10, new ArrayList<Integer>(), gen);
+		Vertex root = gen.buildEliminationTree();
+		TreeInitializer.visit(root);
+		TestTreeBuilder.printTree("", root);
+		System.out.println("Generator leaves count: " + gen.getLeaves().size());
+		return root;
+		
+	}
+	
+	//generate mesh 1 
+	/*
+	 * -----------------
+	 * |+|+|+|+|
+	 * ---------
+	 * | | | | |
+	 * ---------
+	 * |   |   |
+	 * ---------
+	 * 
+	 * 
+	 */
+	private static void generateMesh1(int level, List<Integer> path, Generator gen) {
+		Queue<List<Integer>> q = new LinkedList<List<Integer>>();
+		q.add(path);
+		for (int i = 0; i < level; ++i) {
+			List<List<Integer>> tmp = new ArrayList<>(q);
+			q.clear();
+			for (List<Integer> l : tmp) {
+				gen.breakPart(l, BreakType.CROSS);
+				l.add(0);
+				q.add(new ArrayList<>(l));
+				l.remove(l.size() - 1);
+				l.add(1);
+				q.add(new ArrayList<>(l));
+
+			}
+		}
+
+	}
+
+
+	//generate mesh 1 
+	/*
+	 * -----------------
+	 * | | | |+|
+	 * ---------
+	 * |   |   |
+	 * ---------
+	 * 
+	 * 
+	 */
+	private static void generateMesh2(int level, List<Integer> path, Generator gen) {
+		if(level < 30){
+			gen.breakPart(path, BreakType.CROSS);
+			path.add(1);
+			generateMesh2(level + 1, path, gen);
+		}
+
+	}
+
 	private static List<Element2D> gatherElements(Collection<Vertex> leaves){
 		List<Element2D> elements = new ArrayList<>();
 		for(Vertex v : leaves){

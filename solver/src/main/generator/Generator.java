@@ -197,7 +197,7 @@ public class Generator {
 		return nextId++;
 	}
 
-	private void getLeaves(Part root, List<Part> leaves) {
+	public void getLeaves(Part root, List<Part> leaves) {
 		if (root.children.isEmpty()) {
 			leaves.add(root);
 		} else {
@@ -207,4 +207,10 @@ public class Generator {
 		}
 	}
 
+	public List<Part> getLeaves() {
+		List<Part> leaves = new ArrayList<>();
+		getLeaves(root, leaves);
+		return leaves;
+
+	}
 }
