@@ -11,13 +11,13 @@ public class SolveRootProduction extends Production {
 
 	@Override
 	public void apply() {
-		MatrixUtil.printVector(vertex.b);
-		System.out.println();
+//		MatrixUtil.printVector(vertex.b);
+//		System.out.println();
 		vertex.x = MatrixUtil.gaussianElimination(vertex.A, vertex.b);
 
-		System.out.println("root x: ");
-		MatrixUtil.printVector(vertex.x);
-		System.out.println();
+//		System.out.println("root x: ");
+//		MatrixUtil.printVector(vertex.x);
+//		System.out.println();
 
 	}
 
