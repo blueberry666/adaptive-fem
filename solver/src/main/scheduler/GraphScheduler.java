@@ -1,9 +1,6 @@
 package main.scheduler;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 
 
 public class GraphScheduler {
@@ -13,16 +10,23 @@ public class GraphScheduler {
 	
 		
 	public void findNodes(Set<Node> allNodes, Collection<? extends Node> startNodes){
-		allNodes.addAll(startNodes);
-		for(Node node : startNodes){
-			findNodes(allNodes,node.getInNodes());
-		}
+        allNodes.addAll(startNodes);
+        Queue<Node> q = new LinkedList<Node>(startNodes);
+        while(!q.isEmpty()){
+            for(Node n : q.poll().getInNodes()){
+                if(!allNodes.contains(n)){
+                    q.add(n);
+                    allNodes.add(n);
+                }
+            }
+        }
 
 	}
 	
 	public List<List<Node>> schedule(Collection<? extends Node> starNodes){
 		Set<Node> graph = new HashSet<>();
 		findNodes(graph, starNodes);
+        System.out.println("Graph size:" + graph.size());
 		List<List<Node>> groups = new LinkedList<>();
 		while (!graph.isEmpty()) {
 			List<Node> nodes = new LinkedList<>();

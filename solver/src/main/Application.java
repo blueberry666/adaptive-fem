@@ -85,10 +85,10 @@ public class Application {
 
     private static Vertex generateMesh(){
         Generator gen = new Generator(0, 1, 0, 1);
-        generateMesh1(10, new ArrayList<Integer>(), gen);
+        generateMesh1(16, new ArrayList<Integer>(), gen);
         Vertex root = gen.buildEliminationTree();
         TreeInitializer.visit(root);
-        TestTreeBuilder.printTree("", root);
+//        TestTreeBuilder.printTree("", root);
         System.out.println("Generator leaves count: " + gen.getLeaves().size());
         return root;
 
