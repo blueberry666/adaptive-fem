@@ -2,59 +2,81 @@ package main.scheduler;
 
 import java.util.*;
 
-
 public class GraphScheduler {
-	
+
 	Set<Node> usedNodes = new HashSet<>();
-	
-	
-		
-	public void findNodes(Set<Node> allNodes, Collection<? extends Node> startNodes){
-        allNodes.addAll(startNodes);
-        Queue<Node> q = new LinkedList<Node>(startNodes);
-        while(!q.isEmpty()){
-            for(Node n : q.poll().getInNodes()){
-                if(!allNodes.contains(n)){
-                    q.add(n);
-                    allNodes.add(n);
-                }
-            }
-        }
 
-	}
-	
-	public List<List<Node>> schedule(Collection<? extends Node> starNodes){
-		Set<Node> graph = new HashSet<>();
-		findNodes(graph, starNodes);
-        System.out.println("Graph size:" + graph.size());
-		List<List<Node>> groups = new LinkedList<>();
-		while (!graph.isEmpty()) {
-			List<Node> nodes = new LinkedList<>();
-			for (Node n : graph) {
-				if (canDoStuff(n)) {
-					nodes.add(n);
+	public void findNodes(Set<Node> allNodes,
+			Collection<? extends Node> startNodes) {
+		Queue<Node> q = new ArrayDeque<>(startNodes);
+		allNodes.addAll(startNodes);
+		while (!q.isEmpty()) {
+			Node node = q.poll();
+			for (Node dep : node.getInNodes()) {
+				if (allNodes.add(dep)) {
+					q.add(dep);
 				}
-
 			}
-			usedNodes.addAll(nodes);
-			graph.removeAll(nodes);
-			groups.add(nodes);
 		}
-		
+	}
+
+	private Map<Node, List<Node>> buildReverse(Set<Node> nodes) {
+		Map<Node, List<Node>> rev = new HashMap<>();
+		for (Node node : nodes) {
+			rev.put(node, new ArrayList<>(4));
+		}
+		for (Node node : nodes) {
+			for (Node dep : node.getInNodes()) {
+				rev.get(dep).add(node);
+			}
+		}
+		return rev;
+	}
+
+	private List<Node> findFirstLayer(Set<Node> nodes) {
+		List<Node> layer = new ArrayList<>();
+		for (Node node : nodes) {
+			if (node.getInNodes().isEmpty()) {
+				layer.add(node);
+			}
+		}
+		return layer;
+	}
+
+	public List<List<Node>> schedule(Collection<? extends Node> starNodes) {
+		Set<Node> graph = new HashSet<>();
+		long before = System.currentTimeMillis();
+		findNodes(graph, starNodes);
+		long after = System.currentTimeMillis();
+//		System.out.println("Graph traversal: " + (after - before));
+//		System.out.println("Nodes: " + graph.size());
+		long beforeRev = System.currentTimeMillis();
+		Map<Node, List<Node>> rev = buildReverse(graph);
+		long afterRev = System.currentTimeMillis();
+//		System.out.println("Building reverse: " + (afterRev - beforeRev));
+		List<List<Node>> groups = new LinkedList<>();
+		List<Node> layer = findFirstLayer(graph);
+		graph.removeAll(layer);
+		groups.add(layer);
+		do {
+			List<Node> buffer = new ArrayList<>();
+			for (Node node : layer) {
+				for (Node next : rev.get(node)) {
+					next.getInNodes().remove(node);
+					if (next.getInNodes().isEmpty()) {
+						buffer.add(next);
+					}
+				}
+			}
+			layer = buffer;
+			if (graph.size() == layer.size()) {
+				graph.clear();
+			} else {
+				graph.removeAll(layer);
+			}
+			groups.add(layer);
+		} while (!graph.isEmpty());
+
 		return groups;
 	}
-	
-	
-	private boolean canDoStuff(Node node){
-		if(node.getInNodes().isEmpty()){
-			return true;
-		}
-		for(Node n : node.getInNodes()){
-			if(!usedNodes.contains(n)){
-				return false;
-			}
-		}
-		return true;
-	}
-
 }

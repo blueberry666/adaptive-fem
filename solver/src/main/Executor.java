@@ -13,8 +13,8 @@ public class Executor {
 	private ExecutorService executorService;
 	private CountDownLatch countDownLatch;
 	
-	public Executor(){
-		this.executorService = Executors.newFixedThreadPool(1);
+	public Executor(int pool){
+		this.executorService = Executors.newFixedThreadPool(pool);
 	}
 	
 	public void beginStage(int productionCount){
