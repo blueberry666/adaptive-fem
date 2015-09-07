@@ -1,5 +1,15 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.TreeMap;
+
 import main.generator.BreakType;
 import main.generator.Direction;
 import main.generator.Generator;
@@ -9,68 +19,58 @@ import main.scheduler.GraphScheduler;
 import main.scheduler.Node;
 import main.scheduler.NotSoDummyNode;
 import main.scheduler.ProductionGraphBuilder;
-import main.tree.*;
+import main.tree.DOF;
+import main.tree.Element2D;
+import main.tree.TreeInitializer;
+import main.tree.Vertex;
 import main.utils.MatrixUtil;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 public class Application {
 
+	//input: adaptation_type {1,2} level_count threads_count
 	public static void main(String[] args) {
 
+		int adaptationType = new Integer(args[0]);
+		int levels = new Integer(args[1]);
+		int threads = new Integer(args[2]);
 		Long scheduleTime = 0l;
-		Long executeTime = 0l;
-		int [] pools = new int []{1,2,4,8};
-		for(int p=0;p<4;++p){
-			System.out.println("For "+pools[p] +" threads");
-			for (int i = 0; i < 10; ++i) {
-				Vertex root = generateMesh();
+		Long executionTime = 0l;
+		int iterations = 5;
+		for (int i = 0; i < iterations; ++i) {
+			Vertex root = generateMesh(adaptationType, levels);
 
-				Long st = System.currentTimeMillis();
+			Long st = System.currentTimeMillis();
 
-				ProductionGraphBuilder graphBuilder = new ProductionGraphBuilder(
-						new L2ProjectionFactory());
+			ProductionGraphBuilder graphBuilder = new ProductionGraphBuilder(
+					new L2ProjectionFactory());
 
-				// System.out.println("production graph build time: " +
-				// (System.currentTimeMillis() - st));
-				st = System.currentTimeMillis();
-				GraphScheduler scheduler = new GraphScheduler();
-				Set<? extends Node> graph = graphBuilder.makeGraph(root);
-				// System.out.println("Build graph time: " +
-				// (System.currentTimeMillis() - st));
-				st = System.currentTimeMillis();
-				List<List<Node>> scheduledNodes = scheduler.schedule(graph);
-				Long tmp = (System.currentTimeMillis() - st);
-				scheduleTime += tmp;
-				System.out.print(tmp+" ");//Schedule graph time " + i + ":  " + tmp);
-				st = System.currentTimeMillis();
-				execute(scheduledNodes, root, pools[p]);
-				tmp = (System.currentTimeMillis() - st);
-				executeTime += tmp;
-				System.out.println(tmp);//"Execute graph time" + i + ": " + tmp);
+			st = System.currentTimeMillis();
+			GraphScheduler scheduler = new GraphScheduler();
+			Set<? extends Node> graph = graphBuilder.makeGraph(root);
 
-				Set<Vertex> leaves = new HashSet<>();
-				getLeaves(leaves, root);
-				Map<DOF, Double> result = gatherResult(leaves);
+			st = System.currentTimeMillis();
+			List<List<Node>> scheduledNodes = scheduler.schedule(graph);
+			Long tmp = (System.currentTimeMillis() - st);
+			scheduleTime += tmp;
 
-			}
+			st = System.currentTimeMillis();
+			execute(scheduledNodes, root, threads);
+			tmp = (System.currentTimeMillis() - st);
+			executionTime += tmp;
+
+			Set<Vertex> leaves = new HashSet<>();
+			getLeaves(leaves, root);
+			Map<DOF, Double> result = gatherResult(leaves);
+
 		}
-		
-//		System.out.print("Schedule graph time:  " + scheduleTime / 10);
-//		System.out.println("Execute graph time: " + executeTime / 10);
 
-		System.out.println();
-		// for(Entry<DOF, Double> e : result.entrySet()){
-		// System.out.println("ID: " + e.getKey().ID + " = " + e.getValue());//
-		// + "     " + gaussianElimResult.get(e.getKey()));
-		// }
-
-		// ResultPrinter.printResult(gatherElements(leaves), result);
+		// System.out.print("Schedule graph time:  " + scheduleTime / 10);
+		System.out.println(adaptationType + ":" + threads + ":" + levels + ":" + executionTime / iterations);
 
 	}
 
-	private static void execute(List<List<Node>> scheduledNodes, Vertex root, int pool) {
+	private static void execute(List<List<Node>> scheduledNodes, Vertex root,
+			int pool) {
 		Executor executor = new Executor(pool);
 		int idx = 0;
 		Map<DOF, Double> gaussianElimResult = null;
@@ -103,9 +103,16 @@ public class Application {
 		return result;
 	}
 
-	private static Vertex generateMesh() {
+	private static Vertex generateMesh(int meshType, int levelsCount) {
 		Generator gen = new Generator(0, 1, 0, 1);
-		generateMesh1(16, new ArrayList<Integer>(), gen);
+		switch(meshType){
+		case 1:
+			generateEdgeMesh(levelsCount, new ArrayList<Integer>(), gen);
+			break;
+		case 2:
+			generateCornerMesh(levelsCount, new ArrayList<Integer>(), gen);
+			break;
+		}
 		Vertex root = gen.buildEliminationTree();
 		TreeInitializer.visit(root);
 		// TestTreeBuilder.printTree("", root);
@@ -118,7 +125,7 @@ public class Application {
 	/*
 	 * ----------------- |+|+|+|+| --------- | | | | | --------- | | | ---------
 	 */
-	private static void generateMesh1(int level, List<Integer> path,
+	private static void generateEdgeMesh(int level, List<Integer> path,
 			Generator gen) {
 		Queue<List<Integer>> q = new LinkedList<List<Integer>>();
 		q.add(path);
@@ -142,12 +149,12 @@ public class Application {
 	/*
 	 * ----------------- | | | |+| --------- | | | ---------
 	 */
-	private static void generateMesh2(int level, List<Integer> path,
+	private static void generateCornerMesh(int level, List<Integer> path,
 			Generator gen) {
 		if (level > 0) {
 			gen.breakPart(path, BreakType.CROSS);
 			path.add(1);
-			generateMesh2(level - 1, path, gen);
+			generateCornerMesh(level - 1, path, gen);
 		}
 
 	}
