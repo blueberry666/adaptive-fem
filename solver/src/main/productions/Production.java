@@ -30,8 +30,10 @@ public abstract class Production implements Runnable, Node {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		if(getLatch() != null){
+			getLatch().countDown();
+		}
 		
-		getLatch().countDown();
 		
 	}
 	

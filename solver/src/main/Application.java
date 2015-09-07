@@ -10,6 +10,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
 
+import main.executor.Executor;
+import main.executor.GroupingExecutor;
 import main.generator.BreakType;
 import main.generator.Direction;
 import main.generator.Generator;
@@ -27,6 +29,7 @@ import main.utils.MatrixUtil;
 
 public class Application {
 
+	private static List<Long> timesMap = new ArrayList<>();
 	//input: adaptation_type {1,2} level_count threads_count
 	public static void main(String[] args) {
 
@@ -66,29 +69,26 @@ public class Application {
 
 		// System.out.print("Schedule graph time:  " + scheduleTime / 10);
 		System.out.println(adaptationType + ":" + threads + ":" + levels + ":" + executionTime / iterations);
+		for (int i = 0; i < timesMap.size(); ++i) {
+			System.out.println("\t " + i + " " + timesMap.get(i));
+		}
 
 	}
 
 	private static void execute(List<List<Node>> scheduledNodes, Vertex root,
 			int pool) {
-		Executor executor = new Executor(pool);
-		int idx = 0;
-		Map<DOF, Double> gaussianElimResult = null;
-
+		Executor executor = new GroupingExecutor(pool);
+		int id = 1;
 		for (List<Node> nodes : scheduledNodes) {
+			Long st = System.currentTimeMillis();
 			executor.beginStage(nodes.size());
 			for (Node n : nodes) {
 				executor.submitProduction(((NotSoDummyNode) n).getProduction());
 			}
 			executor.waitForEnd();
-			// if(idx==1){
-			// Long st = System.currentTimeMillis();
-			// gaussianElimResult = gatherMatrix(root);
-			// System.out.println("Gaussian time!: " +
-			// (System.currentTimeMillis()-st));
-			// }
-			// ++idx;
+			timesMap.add(System.currentTimeMillis()-st);
 		}
+		
 
 		executor.shutdown();
 	}

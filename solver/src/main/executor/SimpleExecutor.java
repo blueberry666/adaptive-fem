@@ -1,5 +1,4 @@
-package main;
-
+package main.executor;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -8,12 +7,12 @@ import java.util.concurrent.TimeUnit;
 
 import main.productions.Production;
 
-public class Executor {
-	
+public class SimpleExecutor implements Executor{
+
 	private ExecutorService executorService;
 	private CountDownLatch countDownLatch;
 	
-	public Executor(int pool){
+	public SimpleExecutor(int pool){
 		this.executorService = Executors.newFixedThreadPool(pool);
 	}
 	
@@ -44,7 +43,4 @@ public class Executor {
 			e.printStackTrace();
 		}
 	}
-	
-	
-
 }
