@@ -69,7 +69,7 @@ public class Application {
 
 		// System.out.print("Schedule graph time:  " + scheduleTime / 10);
 		System.out.println(adaptationType + ";" + threads + ";" + levels + ";" + executionTime / iterations);
-		for (int i = 0; i < timesMap.get(0).size(); ++i) {
+		for (int i = 0; i < 1;++i){//timesMap.get(0).size(); ++i) {
 			long time= Long.MAX_VALUE;
 			for(int j=0;j<timesMap.size();++j){
 				long tmp = timesMap.get(j).get(i);

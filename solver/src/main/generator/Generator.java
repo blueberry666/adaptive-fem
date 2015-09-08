@@ -1,9 +1,11 @@
 package main.generator;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import main.tree.Element2D;
 import main.tree.Vertex;
@@ -197,14 +199,20 @@ public class Generator {
 		return nextId++;
 	}
 
-	public void getLeaves(Part root, List<Part> leaves) {
-		if (root.children.isEmpty()) {
-			leaves.add(root);
-		} else {
-			for (Part p : root.children) {
-				getLeaves(p, leaves);
+	public void getLeaves(Part rooty, List<Part> leaves) {
+		Queue <Part> q = new ArrayDeque<>();
+		q.add(rooty);
+		while(!q.isEmpty()){
+			Part root = q.poll();
+			if (root.children.isEmpty()) {
+				leaves.add(root);
+			} else {
+				for (Part p : root.children) {
+					q.add(p);
+				}
 			}
 		}
+		
 	}
 
 	public List<Part> getLeaves() {

@@ -1,6 +1,8 @@
 package main.scheduler;
 
+import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
 
 import main.productions.BackwardSubstitutionProduction;
@@ -20,62 +22,91 @@ public class ProductionGraphBuilder {
 	}
 
 	public Set<NotSoDummyNode> makeGraph(Vertex root) {
-		NotSoDummyNode rootNode = makeLeftSideOfGraph(root, null);
+		NotSoDummyNode rootNode = makeLeftSideOfGraph(root);
 		Set<NotSoDummyNode> leaves = new HashSet<>();
 		makeRightSideOfGraph(root, rootNode, leaves);
 		return leaves;
 
 	}
 
-	private NotSoDummyNode makeLeftSideOfGraph(Vertex root,
-			NotSoDummyNode parent) {
+	private NotSoDummyNode makeLeftSideOfGraph(Vertex rooty) {
+		Queue<ClassyClass> q = new ArrayDeque<>();
+		q.add(new ClassyClass(rooty, null));
+		NotSoDummyNode dupa = null;
+		while (!q.isEmpty()) {
+			ClassyClass d = q.poll();
+			Vertex root = d.vertex;
+			NotSoDummyNode parent = d.parent;
 
-		if(!root.children.isEmpty()){
-			CombineChildrenProduction combineProd = new CombineChildrenProduction(
-					root);
-			NotSoDummyNode combineNode = new NotSoDummyNode("notroot", combineProd);
-			Production elimProd;
+			if (!root.children.isEmpty()) {
+				CombineChildrenProduction combineProd = new CombineChildrenProduction(
+						root);
+				NotSoDummyNode combineNode = new NotSoDummyNode("notroot",
+						combineProd);
+				Production elimProd;
 
-			elimProd = parent != null ? new PartialEliminationProduction(root)
-					: new SolveRootProduction(root);
-			NotSoDummyNode elimNode = new NotSoDummyNode("notroot", elimProd);
+				elimProd = parent != null ? new PartialEliminationProduction(
+						root) : new SolveRootProduction(root);
+				NotSoDummyNode elimNode = new NotSoDummyNode("notroot",
+						elimProd);
+				if(dupa == null){
+					dupa = elimNode;
+				}
 
-			if (parent != null) {
-				parent.addInNode(elimNode);
+				if (parent != null) {
+					parent.addInNode(elimNode);
+				}
+				elimNode.addInNode(combineNode);
+
+				for (Vertex v : root.children) {
+					q.add(new ClassyClass(v, combineNode));
+
+				}
+
+			} else {
+				Production p = factory.makeProduction(root);
+				NotSoDummyNode node = new NotSoDummyNode("leaf", p);
+				parent.addInNode(node);
+				if(dupa == null){
+					dupa = node;
+				}
 			}
-			elimNode.addInNode(combineNode);
-
-			for (Vertex v : root.children) {
-				makeLeftSideOfGraph(v, combineNode);
-
-			}
-
-			return elimNode;
-		}else{
-			Production p = factory.makeProduction(root);
-			NotSoDummyNode node = new NotSoDummyNode("leaf", p);
-			parent.addInNode(node);
-			return node;
-			
 		}
-		
-
+		return dupa;
 	}
 
-	private void makeRightSideOfGraph(Vertex root, NotSoDummyNode parent,
+	private void makeRightSideOfGraph(Vertex rooty, NotSoDummyNode parenty,
 			Set<NotSoDummyNode> leaves) {
 
-		BackwardSubstitutionProduction bs = new BackwardSubstitutionProduction(
-				root);
-		NotSoDummyNode bsNode = new NotSoDummyNode("bs", bs);
-		bsNode.addInNode(parent);
+		
+		ClassyClass c = new ClassyClass(rooty, parenty);
+		Queue <ClassyClass> q = new ArrayDeque<>();
+		q.add(c);
+		while (!q.isEmpty()) {
+			Vertex root = c.vertex;
+			NotSoDummyNode parent = c.parent;
 
-		if (root.children.isEmpty()) {
-			leaves.add(bsNode);
-		}
-		for (Vertex v : root.children) {
-			makeRightSideOfGraph(v, bsNode, leaves);
+			BackwardSubstitutionProduction bs = new BackwardSubstitutionProduction(
+					root);
+			NotSoDummyNode bsNode = new NotSoDummyNode("bs", bs);
+			bsNode.addInNode(parent);
+			if (root.children.isEmpty()) {
+				leaves.add(bsNode);
+			}
+			for (Vertex v : root.children) {
+				q.add(new ClassyClass(v, bsNode));
+			}
 		}
 	}
 
+}
+
+class ClassyClass{
+	public Vertex vertex;
+	public NotSoDummyNode parent;
+	
+	public ClassyClass(Vertex v, NotSoDummyNode n){
+		vertex = v;
+		parent = n;
+	}
 }
