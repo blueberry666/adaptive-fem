@@ -72,6 +72,7 @@ public class ProductionGraphBuilder {
 				}
 			}
 		}
+//		System.out.println("after leftSide");
 		return dupa;
 	}
 
@@ -83,8 +84,9 @@ public class ProductionGraphBuilder {
 		Queue <ClassyClass> q = new ArrayDeque<>();
 		q.add(c);
 		while (!q.isEmpty()) {
-			Vertex root = c.vertex;
-			NotSoDummyNode parent = c.parent;
+			ClassyClass cl = q.poll();
+			Vertex root = cl.vertex;
+			NotSoDummyNode parent = cl.parent;
 
 			BackwardSubstitutionProduction bs = new BackwardSubstitutionProduction(
 					root);
@@ -97,6 +99,7 @@ public class ProductionGraphBuilder {
 				q.add(new ClassyClass(v, bsNode));
 			}
 		}
+//		System.out.println("after rightSide");
 	}
 
 }

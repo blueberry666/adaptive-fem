@@ -46,8 +46,8 @@ public class Generator {
 
 	}
 	
-	public Part[] breakPart(List<Integer> path, BreakType breakType) {
-		Part parent = getPartByPath(path);
+	public Part[] breakPart(List<Integer> path, BreakType breakType, Part root) {
+		Part parent = getPartByPath(path, root);
 		if (!parent.children.isEmpty()) {
 			throw new RuntimeException("Part already broken!!!");
 		}
@@ -67,7 +67,7 @@ public class Generator {
 		return broken;
 	}
 
-	private Part getPartByPath(List<Integer> path) {
+	private Part getPartByPath(List<Integer> path, Part root) {
 		if (path.isEmpty()) {
 			return root;
 		}
@@ -213,6 +213,8 @@ public class Generator {
 			}
 		}
 		
+//		System.out.println("after getLeaves");
+		
 	}
 
 	public List<Part> getLeaves() {
@@ -220,5 +222,9 @@ public class Generator {
 		getLeaves(root, leaves);
 		return leaves;
 
+	}
+	
+	public Part getRoot(){
+		return root;
 	}
 }

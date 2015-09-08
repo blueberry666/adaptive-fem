@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,27 +41,34 @@ public class Application {
 		Long executionTime = 0l;
 		int iterations = 5;
 		for (int i = 0; i < iterations; ++i) {
-			Vertex root = generateMesh(adaptationType, levels);
-
 			Long st = System.currentTimeMillis();
+			System.out.println("begin for");
+			Vertex root = generateMesh(adaptationType, levels);
+			System.out.println("after grnerate mesh "+(System.currentTimeMillis() - st));
+			st = System.currentTimeMillis();
 
 			ProductionGraphBuilder graphBuilder = new ProductionGraphBuilder(
 					new L2ProjectionFactory());
+			System.out.println("graphbuild: "+(System.currentTimeMillis() - st));
 
 			st = System.currentTimeMillis();
 			GraphScheduler scheduler = new GraphScheduler();
 			Set<? extends Node> graph = graphBuilder.makeGraph(root);
-
+			System.out.println("make graphs: "+(System.currentTimeMillis() - st));
+			
 			st = System.currentTimeMillis();
 			List<List<Node>> scheduledNodes = scheduler.schedule(graph);
 			Long tmp = (System.currentTimeMillis() - st);
 			scheduleTime += tmp;
+			System.out.println("schedule: "+(System.currentTimeMillis() - st));
 
 			st = System.currentTimeMillis();
 			execute(scheduledNodes, root, threads);
 			tmp = (System.currentTimeMillis() - st);
 			executionTime += tmp;
+			System.out.println("execute: "+(System.currentTimeMillis() - st));
 
+			
 			Set<Vertex> leaves = new HashSet<>();
 			getLeaves(leaves, root);
 			Map<DOF, Double> result = gatherResult(leaves);
@@ -141,7 +149,7 @@ public class Application {
 			List<List<Integer>> tmp = new ArrayList<>(q);
 			q.clear();
 			for (List<Integer> l : tmp) {
-				gen.breakPart(l, BreakType.CROSS);
+				gen.breakPart(l, BreakType.CROSS, gen.getRoot());
 				l.add(0);
 				q.add(new ArrayList<>(l));
 				l.remove(l.size() - 1);
@@ -159,10 +167,11 @@ public class Application {
 	 */
 	private static void generateCornerMesh(int level, List<Integer> path,
 			Generator gen) {
-		if (level > 0) {
-			gen.breakPart(path, BreakType.CROSS);
-			path.add(1);
-			generateCornerMesh(level - 1, path, gen);
+		Part root = gen.getRoot();
+		for (int i = 0; i < level; ++i) {
+			root = gen.breakPart(Collections.<Integer> emptyList(),
+					BreakType.CROSS, root)[1];
+
 		}
 
 	}
