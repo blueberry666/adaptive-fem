@@ -26,7 +26,10 @@ public class GroupingExecutor implements Executor{
 	}
 	
 	public void beginStage(int productionCount){
-		listSize = productionCount/5*pool;
+		listSize = productionCount/(5*pool);
+		productionGroups.clear();
+		productionGroups.add(new ArrayList<>());
+		
 	}
 	
 	public void waitForEnd(){

@@ -29,7 +29,7 @@ import main.utils.MatrixUtil;
 
 public class Application {
 
-	private static List<Long> timesMap = new ArrayList<>();
+	private static List<List<Long>> timesMap = new ArrayList<>();
 	//input: adaptation_type {1,2} level_count threads_count
 	public static void main(String[] args) {
 
@@ -68,9 +68,16 @@ public class Application {
 		}
 
 		// System.out.print("Schedule graph time:  " + scheduleTime / 10);
-		System.out.println(adaptationType + ":" + threads + ":" + levels + ":" + executionTime / iterations);
-		for (int i = 0; i < timesMap.size(); ++i) {
-			System.out.println("\t " + i + " " + timesMap.get(i));
+		System.out.println(adaptationType + ";" + threads + ";" + levels + ";" + executionTime / iterations);
+		for (int i = 0; i < timesMap.get(0).size(); ++i) {
+			long time= Long.MAX_VALUE;
+			for(int j=0;j<timesMap.size();++j){
+				long tmp = timesMap.get(j).get(i);
+				if(tmp<time){
+					time=tmp;
+				}
+			}
+			System.out.println("\t " + i + ";" + time);
 		}
 
 	}
@@ -79,16 +86,17 @@ public class Application {
 			int pool) {
 		Executor executor = new GroupingExecutor(pool);
 		int id = 1;
+		List<Long> list = new ArrayList<>();
 		for (List<Node> nodes : scheduledNodes) {
-			Long st = System.currentTimeMillis();
+			Long st = System.nanoTime();
 			executor.beginStage(nodes.size());
 			for (Node n : nodes) {
 				executor.submitProduction(((NotSoDummyNode) n).getProduction());
 			}
 			executor.waitForEnd();
-			timesMap.add(System.currentTimeMillis()-st);
+			list.add(System.nanoTime()-st);
 		}
-		
+		timesMap.add(list);
 
 		executor.shutdown();
 	}
