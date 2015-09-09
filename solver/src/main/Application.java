@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,7 +40,7 @@ public class Application {
 		int threads = new Integer(args[2]);
 		Long scheduleTime = 0l;
 		Long executionTime = 0l;
-		int iterations = 5;
+		int iterations = 1;
 		for (int i = 0; i < iterations; ++i) {
 			Vertex root = generateMesh(adaptationType, levels);
 
@@ -181,13 +182,16 @@ public class Application {
 	}
 
 	private static void getLeaves(Set<Vertex> leaves, Vertex root) {
-		if (root.children.isEmpty()) {
-			leaves.add(root);
-		} else {
-			for (Vertex v : root.children) {
-				getLeaves(leaves, v);
-			}
+		Queue<Vertex> q = new ArrayDeque<Vertex>();
+		q.add(root);
 
+		while (! q.isEmpty()) {
+			Vertex v = q.poll();
+			if (v.children.isEmpty()) {
+				leaves.add(v);
+			} else {
+				q.addAll(v.children);
+			}
 		}
 	}
 

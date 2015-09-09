@@ -10,7 +10,8 @@ import java.util.Queue;
 import main.tree.Element2D;
 import main.tree.Vertex;
 import main.utils.ClassyClass;
-import main.utils.Rectangle;
+import main.utils.Cut;
+import main.utils.CutRectangle;
 
 public class Generator {
 
@@ -19,7 +20,7 @@ public class Generator {
 
 	public Generator(double x0, double x1, double y0, double y1) {
 		Part root = new Part(getNextId());
-		root.rectangle = new Rectangle(x0, x1, y0, y1);
+		root.rectangle = new CutRectangle(Cut.root(x0, x1), Cut.root(y0, y1));
 		this.root = root;
 		for (Direction d : Direction.values()) {
 			Edge e = new Edge();
@@ -104,7 +105,7 @@ public class Generator {
 
 	// top bottom
 	private Part[] breakHorizontal(Part parent) {
-		Rectangle[] broken = parent.rectangle.breakHorizontal();
+		CutRectangle[] broken = parent.rectangle.breakHorizontal();
 
 		Part topPart = new Part(getNextId());
 		Part bottomPart = new Part(getNextId());
@@ -136,7 +137,7 @@ public class Generator {
 
 	// left right
 	private Part[] breakVertical(Part parent) {
-		Rectangle[] broken = parent.rectangle.breakVertical();
+		CutRectangle[] broken = parent.rectangle.breakVertical();
 		Part leftPart = new Part(getNextId());
 		Part rightPart = new Part(getNextId());
 		leftPart.rectangle = broken[0];

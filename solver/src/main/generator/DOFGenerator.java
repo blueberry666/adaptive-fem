@@ -6,13 +6,13 @@ import java.util.Map;
 
 import main.tree.DOF;
 import main.tree.Element2D;
-import main.utils.Point;
-import main.utils.Rectangle;
+import main.utils.CutPoint;
+import main.utils.CutRectangle;
 
 public class DOFGenerator {
 	
 	public Map<Part, Element2D> elementToPart = new HashMap<>();
-	public Map<Point, DOF> DOFtoPoint = new HashMap<>();
+	public Map<CutPoint, DOF> DOFtoPoint = new HashMap<>();
 	private int dofID = 0;
 	private int elemID = 0;
 	
@@ -21,7 +21,7 @@ public class DOFGenerator {
 		for(Part parent : grid){
 			Map<DOF,double[]> dofMap = new HashMap<>();
 			for(Corner c : Corner.values()){
-				Point cornerPoint = null;
+				CutPoint cornerPoint = null;
 				Direction[] directions = Corner.getDirections(c);
 				boolean free = true;
 				for(Direction d : directions){
@@ -31,9 +31,9 @@ public class DOFGenerator {
 						Neighborhood.OneEdge oneEdge = (Neighborhood.OneEdge)n;
 						Neighborhood.SinglePart singlePart = (Neighborhood.SinglePart)oneEdge.edge.getNeighborhood(d);
 						Part sPart = singlePart.part;
-						Point[] points = getEdgeVertices(sPart.rectangle, Direction.opposite(d));
+						CutPoint[] points = getEdgeVertices(sPart.rectangle, Direction.opposite(d));
 						if(!cornerPoint.equals(points[0]) && !cornerPoint.equals(points[1])){
-							for(Point point : points){
+							for(CutPoint point : points){
 								DOF dof = getDof(point);
 								getDofArray(dofMap, dof)[c.ordinal()] = 0.5;
 							}
@@ -50,7 +50,7 @@ public class DOFGenerator {
 				
 			}
 			Element2D elem = new Element2D(getNextElemId());
-			elem.rectangle = parent.rectangle;
+			elem.rectangle = parent.rectangle.toRectangle();
 			for(DOF d : dofMap.keySet()){
 				elem.addDof(d);
 				elem.localBasisFunctions.put(d, dofMap.get(d));
@@ -60,7 +60,7 @@ public class DOFGenerator {
 			
 	}
 	
-	private DOF getDof(Point p){
+	private DOF getDof(CutPoint p){
 		DOF d = DOFtoPoint.get(p);
 		if(d == null){
 			d = new DOF(getNextDofId());
@@ -80,16 +80,16 @@ public class DOFGenerator {
 		
 	}
 
-	private Point[] getEdgeVertices(Rectangle r, Direction d){
+	private CutPoint[] getEdgeVertices(CutRectangle r, Direction d){
 		switch (d) {
 		case LEFT:
-			return new Point[] { r.getPoint(Corner.LB), r.getPoint(Corner.LT) };
+			return new CutPoint[] { r.getPoint(Corner.LB), r.getPoint(Corner.LT) };
 		case RIGHT:
-			return new Point[] { r.getPoint(Corner.RB), r.getPoint(Corner.RT) };		
+			return new CutPoint[] { r.getPoint(Corner.RB), r.getPoint(Corner.RT) };		
 		case TOP:
-			return new Point[] { r.getPoint(Corner.LT), r.getPoint(Corner.RT) };
+			return new CutPoint[] { r.getPoint(Corner.LT), r.getPoint(Corner.RT) };
 		case BOTTOM:
-			return new Point[] { r.getPoint(Corner.LB), r.getPoint(Corner.RB) };
+			return new CutPoint[] { r.getPoint(Corner.LB), r.getPoint(Corner.RB) };
 
 		}
 		

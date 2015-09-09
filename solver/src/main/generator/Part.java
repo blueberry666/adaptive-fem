@@ -3,12 +3,12 @@ package main.generator;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.utils.Rectangle;
+import main.utils.CutRectangle;
 
 public class Part {
 	
 	public int id;
-	public Rectangle rectangle;
+	public CutRectangle rectangle;
 	public Edge [] edges = new Edge[4];
 	public List<Part> children = new ArrayList<>();
 
@@ -27,7 +27,7 @@ public class Part {
 	
 	@Override
     public String toString() {
-           return String.format("Part[id=%d](x=[%f, %f], y=[%f, %f])", id, rectangle.x0, 
-                         rectangle.x1, rectangle.y0, rectangle.y1);
+           return String.format("Part[id=%d](x=[%f, %f], y=[%f, %f])", id, rectangle.x.left(), 
+                         rectangle.x.right(), rectangle.y.left(), rectangle.y.right());
     }
 }

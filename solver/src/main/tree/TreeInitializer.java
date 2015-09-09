@@ -1,14 +1,33 @@
 package main.tree;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
 
 public class TreeInitializer {
+	enum Op {
+		FIND_ELIMINATED_DOFS,
+		FIND_BOUNDARY_ELEMS
+	}
 
+	private static final Map<Op, Long> times = new EnumMap<>(Op.class);
+
+	static {
+		for (Op op: Op.values()) {
+			times.put(op, 0L);
+		}
+	}
+
+	private static void addTime(Op op, long dt) {
+		long value = times.get(op);
+		times.put(op, value + dt);
+	}
+	
 	public static void visit(Vertex vertex) {
 		long st = System.currentTimeMillis();
 		Queue<Vertex> q = new ArrayDeque<>();
@@ -30,7 +49,10 @@ public class TreeInitializer {
 			vertex = dq.pollFirst();
 			doStuff(vertex);
 		}
-		System.out.println("do stuff"+(System.currentTimeMillis()-st));
+		System.out.println("do stuff "+(System.currentTimeMillis()-st));
+		for (Op op: Op.values()) {
+			System.out.printf("%s: %f\n", op, times.get(op) / 1e6);
+		}
 
 	}
 	
@@ -45,9 +67,14 @@ public class TreeInitializer {
 				dofs.addAll(v.getNotEliminatedDOFS());
 				chlidrenBoundaryElements.addAll(v.boundaryElements);
 			}
+			long t1 = System.nanoTime();
 			findEliminatedDofs(vertex, dofs, chlidrenBoundaryElements);
+			long t2 = System.nanoTime();
+			addTime(Op.FIND_ELIMINATED_DOFS, t2 - t1);
 			vertex.rowDofs.addAll(dofs);
 			findBoundaryElements(vertex);
+			long t3 = System.nanoTime();
+			addTime(Op.FIND_BOUNDARY_ELEMS, t3 - t2);
 			
 		}
 		initializeMatrices(vertex);
@@ -79,19 +106,25 @@ public class TreeInitializer {
 			boundaryElements.addAll(v.boundaryElements);
 		}
 
-		for (Element e : boundaryElements) {
-			boolean isBoundary = false;
-			outerLoop: 
-			for (DOF d : e.dofs) {
-				for (Element el : d.elements) {
-					if (!boundaryElements.contains(el)) {
-						isBoundary = true;
-						break outerLoop;
+		for (Vertex v : vertex.children) {
+			Set<DOF> notEliminated = new HashSet<>(v.getNotEliminatedDOFS());
+			for (Element e : v.boundaryElements) {
+				boolean isBoundary = false;
+
+				outerLoop: 
+				for (DOF d : e.dofs) {
+					if (notEliminated.contains(d)) {
+						for (Element el : d.elements) {
+							if (!boundaryElements.contains(el)) {
+								isBoundary = true;
+								break outerLoop;
+							}
+						}
 					}
 				}
-			}
-			if (isBoundary) {
-				vertex.boundaryElements.add(e);
+				if (isBoundary) {
+					vertex.boundaryElements.add(e);
+				}
 			}
 		}
 
