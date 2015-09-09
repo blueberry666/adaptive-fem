@@ -1,17 +1,37 @@
 package main.tree;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Queue;
 import java.util.Set;
 
 
 public class TreeInitializer {
 
-	public static void visit(Vertex vertex){
-		for(Vertex v : vertex.children){
-			visit(v);
+	public static void visit(Vertex vertex) {
+		long st = System.currentTimeMillis();
+		Queue<Vertex> q = new ArrayDeque<>();
+		Deque<Vertex> dq = new ArrayDeque<>();
+		q.add(vertex);
+
+		while (!q.isEmpty()) {
+			vertex = q.poll();
+			dq.addFirst(vertex);
+			for (Vertex v : vertex.children) {
+				q.add(v);
+
+			}
+
 		}
-		doStuff(vertex);
-		
+		System.out.println("add to queue "+ (System.currentTimeMillis()-st));
+		st = System.currentTimeMillis();
+		while (!dq.isEmpty()) {
+			vertex = dq.pollFirst();
+			doStuff(vertex);
+		}
+		System.out.println("do stuff"+(System.currentTimeMillis()-st));
+
 	}
 	
 	private static void doStuff(Vertex vertex){

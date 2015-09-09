@@ -41,33 +41,20 @@ public class Application {
 		Long executionTime = 0l;
 		int iterations = 5;
 		for (int i = 0; i < iterations; ++i) {
-			Long st = System.currentTimeMillis();
-			System.out.println("begin for");
 			Vertex root = generateMesh(adaptationType, levels);
-			System.out.println("after grnerate mesh "+(System.currentTimeMillis() - st));
-			st = System.currentTimeMillis();
 
 			ProductionGraphBuilder graphBuilder = new ProductionGraphBuilder(
 					new L2ProjectionFactory());
-			System.out.println("graphbuild: "+(System.currentTimeMillis() - st));
 
-			st = System.currentTimeMillis();
 			GraphScheduler scheduler = new GraphScheduler();
 			Set<? extends Node> graph = graphBuilder.makeGraph(root);
-			System.out.println("make graphs: "+(System.currentTimeMillis() - st));
 			
-			st = System.currentTimeMillis();
 			List<List<Node>> scheduledNodes = scheduler.schedule(graph);
-			Long tmp = (System.currentTimeMillis() - st);
-			scheduleTime += tmp;
-			System.out.println("schedule: "+(System.currentTimeMillis() - st));
 
-			st = System.currentTimeMillis();
+			Long st = System.currentTimeMillis();
 			execute(scheduledNodes, root, threads);
-			tmp = (System.currentTimeMillis() - st);
+			Long tmp = (System.currentTimeMillis() - st);
 			executionTime += tmp;
-			System.out.println("execute: "+(System.currentTimeMillis() - st));
-
 			
 			Set<Vertex> leaves = new HashSet<>();
 			getLeaves(leaves, root);
@@ -129,10 +116,12 @@ public class Application {
 			generateCornerMesh(levelsCount, new ArrayList<Integer>(), gen);
 			break;
 		}
+
 		Vertex root = gen.buildEliminationTree();
+
+
 		TreeInitializer.visit(root);
-		// TestTreeBuilder.printTree("", root);
-//		System.out.println("Generator leaves count: " + gen.getLeaves().size());
+
 		return root;
 
 	}

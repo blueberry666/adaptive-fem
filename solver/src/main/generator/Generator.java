@@ -9,6 +9,7 @@ import java.util.Queue;
 
 import main.tree.Element2D;
 import main.tree.Vertex;
+import main.utils.ClassyClass;
 import main.utils.Rectangle;
 
 public class Generator {
@@ -36,13 +37,26 @@ public class Generator {
 		return elementsToVertex(root, dofGenerator.elementToPart);
 	}
 
-	private Vertex elementsToVertex(Part part, Map<Part, Element2D> map) {
+	private Vertex elementsToVertex(Part firstPart, Map<Part, Element2D> map) {
 
-		Vertex v = new Vertex(map.get(part));
-		for (Part p : part.children) {
-			v.children.add(elementsToVertex(p, map));
+		Vertex rootVertex = new Vertex(map.get(firstPart));
+		Queue<ClassyClass> q = new ArrayDeque<>();
+		
+		for (Part p : firstPart.children) {
+			q.add(new ClassyClass(rootVertex, p));
 		}
-		return v;
+		while (!q.isEmpty()){
+			ClassyClass classyy = q.poll();
+            Part part = classyy.part;
+            Vertex parent = classyy.vertex;
+            Vertex v = new Vertex(map.get(part));
+            parent.children.add(v);
+
+            for (Part p : part.children) {
+                   q.add(new ClassyClass(v, p));
+            }
+     }
+		return rootVertex;
 
 	}
 	

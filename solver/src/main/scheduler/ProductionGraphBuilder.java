@@ -12,6 +12,7 @@ import main.productions.Production;
 import main.productions.SolveRootProduction;
 import main.productions.productionFactory.ProductionFactory;
 import main.tree.Vertex;
+import main.utils.ClassyClass;
 
 public class ProductionGraphBuilder {
 	
@@ -31,7 +32,7 @@ public class ProductionGraphBuilder {
 
 	private NotSoDummyNode makeLeftSideOfGraph(Vertex rooty) {
 		Queue<ClassyClass> q = new ArrayDeque<>();
-		q.add(new ClassyClass(rooty, null));
+		q.add(new ClassyClass(rooty, (NotSoDummyNode)null));
 		NotSoDummyNode dupa = null;
 		while (!q.isEmpty()) {
 			ClassyClass d = q.poll();
@@ -104,12 +105,4 @@ public class ProductionGraphBuilder {
 
 }
 
-class ClassyClass{
-	public Vertex vertex;
-	public NotSoDummyNode parent;
-	
-	public ClassyClass(Vertex v, NotSoDummyNode n){
-		vertex = v;
-		parent = n;
-	}
-}
+
