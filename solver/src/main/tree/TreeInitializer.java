@@ -29,7 +29,6 @@ public class TreeInitializer {
 	}
 	
 	public static void visit(Vertex vertex) {
-		long st = System.currentTimeMillis();
 		Queue<Vertex> q = new ArrayDeque<>();
 		Deque<Vertex> dq = new ArrayDeque<>();
 		q.add(vertex);
@@ -43,15 +42,9 @@ public class TreeInitializer {
 			}
 
 		}
-		System.out.println("add to queue "+ (System.currentTimeMillis()-st));
-		st = System.currentTimeMillis();
 		while (!dq.isEmpty()) {
 			vertex = dq.pollFirst();
 			doStuff(vertex);
-		}
-		System.out.println("do stuff "+(System.currentTimeMillis()-st));
-		for (Op op: Op.values()) {
-			System.out.printf("%s: %f\n", op, times.get(op) / 1e6);
 		}
 
 	}

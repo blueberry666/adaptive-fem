@@ -45,7 +45,7 @@ public class Cut {
 		}
 
 		private Node[] split() {
-			double s = (a + b) / 2;
+			double s = (left() + right()) / 2;
 			Cut mid = new Cut(s);
 			Node left = new Node(edge(Dir.LEFT), mid);
 			Node right = new Node(mid, edge(Dir.RIGHT));

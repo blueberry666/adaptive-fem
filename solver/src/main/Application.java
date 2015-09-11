@@ -40,7 +40,7 @@ public class Application {
 		int threads = new Integer(args[2]);
 		Long scheduleTime = 0l;
 		Long executionTime = 0l;
-		int iterations = 1;
+		int iterations = 5;
 		for (int i = 0; i < iterations; ++i) {
 			Vertex root = generateMesh(adaptationType, levels);
 
@@ -60,20 +60,23 @@ public class Application {
 			Set<Vertex> leaves = new HashSet<>();
 			getLeaves(leaves, root);
 			Map<DOF, Double> result = gatherResult(leaves);
+			gatherElements(leaves);
+//			ResultPrinter.printResult(gatherElements(leaves), result);
 
 		}
 
 		// System.out.print("Schedule graph time:  " + scheduleTime / 10);
 		System.out.println(adaptationType + ";" + threads + ";" + levels + ";" + executionTime / iterations);
-		for (int i = 0; i < 1;++i){//timesMap.get(0).size(); ++i) {
-			long time= Long.MAX_VALUE;
-			for(int j=0;j<timesMap.size();++j){
+		int size = adaptationType > 2 ? timesMap.get(0).size() : 1;
+		for (int i = 0; i < size; ++i) {
+			long time = Long.MAX_VALUE;
+			for (int j = 0; j < timesMap.size(); ++j) {
 				long tmp = timesMap.get(j).get(i);
-				if(tmp<time){
-					time=tmp;
+				if (tmp < time) {
+					time = tmp;
 				}
 			}
-			System.out.println("\t " + i + ";" + time);
+			System.out.println("\t " + threads + ";" + levels + ";" + time);
 		}
 
 	}
@@ -115,6 +118,9 @@ public class Application {
 			break;
 		case 2:
 			generateCornerMesh(levelsCount, new ArrayList<Integer>(), gen);
+			break;
+		case 3:
+			generateEdgeMesh(levelsCount, new ArrayList<Integer>(), gen);
 			break;
 		}
 
