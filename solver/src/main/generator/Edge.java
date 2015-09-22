@@ -1,19 +1,19 @@
 package main.generator;
 
 public class Edge {
-	
+
 	public Neighborhood topOrRight;
 	public Neighborhood bottomOrLeft;
-	
-	
+
 	public Edge(Neighborhood topOrRight, Neighborhood bottomOrLeft) {
 		this.topOrRight = topOrRight;
-        this.bottomOrLeft = bottomOrLeft;
+		this.bottomOrLeft = bottomOrLeft;
 	}
-	
-	public Edge(){}
 
-	public Neighborhood getNeighborhood(Direction d){
+	public Edge() {
+	}
+
+	public Neighborhood getNeighborhood(Direction d) {
 		switch (d) {
 		case BOTTOM:
 		case LEFT:
@@ -24,8 +24,8 @@ public class Edge {
 		}
 		return null;
 	}
-	
-	public void setNeighborhood(Direction d, Neighborhood n){
+
+	public void setNeighborhood(Direction d, Neighborhood n) {
 		switch (d) {
 		case BOTTOM:
 		case LEFT:
@@ -36,10 +36,11 @@ public class Edge {
 			topOrRight = n;
 		}
 	}
-	
+
 	@Override
-    public String toString() {
-           return String.format("Edge[id=%d](topright=%s, botleft=%s)", hashCode(), topOrRight, bottomOrLeft);
-    }
+	public String toString() {
+		return String.format("Edge[id=%d](topright=%s, botleft=%s)",
+				hashCode(), topOrRight, bottomOrLeft);
+	}
 
 }

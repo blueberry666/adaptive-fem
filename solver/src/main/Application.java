@@ -21,7 +21,7 @@ import main.generator.Part;
 import main.productions.productionFactory.L2ProjectionFactory;
 import main.scheduler.GraphScheduler;
 import main.scheduler.Node;
-import main.scheduler.NotSoDummyNode;
+import main.scheduler.SmartNode;
 import main.scheduler.ProductionGraphBuilder;
 import main.tree.DOF;
 import main.tree.Element2D;
@@ -32,41 +32,38 @@ import main.utils.MatrixUtil;
 public class Application {
 
 	private static List<List<Long>> timesMap = new ArrayList<>();
-	//input: adaptation_type {1,2} level_count threads_count
+
+	// input: adaptation_type {1,2} level_count threads_count
+	//output: adaptation_type;threads;levels;time
 	public static void main(String[] args) {
 
 		int adaptationType = new Integer(args[0]);
 		int levels = new Integer(args[1]);
 		int threads = new Integer(args[2]);
-		Long scheduleTime = 0l;
 		Long executionTime = 0l;
 		int iterations = 5;
+		Vertex root = null;
 		for (int i = 0; i < iterations; ++i) {
-			Vertex root = generateMesh(adaptationType, levels);
+			root = generateMesh(adaptationType, levels);
 
 			ProductionGraphBuilder graphBuilder = new ProductionGraphBuilder(
 					new L2ProjectionFactory());
 
 			GraphScheduler scheduler = new GraphScheduler();
 			Set<? extends Node> graph = graphBuilder.makeGraph(root);
-			
+
 			List<List<Node>> scheduledNodes = scheduler.schedule(graph);
 
 			Long st = System.currentTimeMillis();
 			execute(scheduledNodes, root, threads);
 			Long tmp = (System.currentTimeMillis() - st);
 			executionTime += tmp;
-			
-			Set<Vertex> leaves = new HashSet<>();
-			getLeaves(leaves, root);
-			Map<DOF, Double> result = gatherResult(leaves);
-			gatherElements(leaves);
-//			ResultPrinter.printResult(gatherElements(leaves), result);
 
 		}
 
-		// System.out.print("Schedule graph time:  " + scheduleTime / 10);
 		System.out.println(adaptationType + ";" + threads + ";" + levels + ";" + executionTime / iterations);
+		// for edge adaptation prints nanotime for all levels, for corner only
+		// for first
 		int size = adaptationType > 2 ? timesMap.get(0).size() : 1;
 		for (int i = 0; i < size; ++i) {
 			long time = Long.MAX_VALUE;
@@ -79,21 +76,26 @@ public class Application {
 			System.out.println("\t " + threads + ";" + levels + ";" + time);
 		}
 
+		Set<Vertex> leaves = new HashSet<>();
+		getLeaves(leaves, root);
+		Map<DOF, Double> result = gatherResult(leaves);
+		gatherElements(leaves);
+		ResultPrinter.printResult(gatherElements(leaves), result);
+
 	}
 
 	private static void execute(List<List<Node>> scheduledNodes, Vertex root,
 			int pool) {
 		Executor executor = new GroupingExecutor(pool);
-		int id = 1;
 		List<Long> list = new ArrayList<>();
 		for (List<Node> nodes : scheduledNodes) {
 			Long st = System.nanoTime();
 			executor.beginStage(nodes.size());
 			for (Node n : nodes) {
-				executor.submitProduction(((NotSoDummyNode) n).getProduction());
+				executor.submitProduction(((SmartNode) n).getProduction());
 			}
 			executor.waitForEnd();
-			list.add(System.nanoTime()-st);
+			list.add(System.nanoTime() - st);
 		}
 		timesMap.add(list);
 
@@ -112,7 +114,7 @@ public class Application {
 
 	private static Vertex generateMesh(int meshType, int levelsCount) {
 		Generator gen = new Generator(0, 1, 0, 1);
-		switch(meshType){
+		switch (meshType) {
 		case 1:
 			generateEdgeMesh(levelsCount, new ArrayList<Integer>(), gen);
 			break;
@@ -126,14 +128,13 @@ public class Application {
 
 		Vertex root = gen.buildEliminationTree();
 
-
 		TreeInitializer.visit(root);
 
 		return root;
 
 	}
 
-	// generate mesh 1
+	// generate edge mesh
 	/*
 	 * ----------------- |+|+|+|+| --------- | | | | | --------- | | | ---------
 	 */
@@ -157,7 +158,7 @@ public class Application {
 
 	}
 
-	// generate mesh 2
+	// generate corner mesh
 	/*
 	 * ----------------- | | | |+| --------- | | | ---------
 	 */
@@ -191,7 +192,7 @@ public class Application {
 		Queue<Vertex> q = new ArrayDeque<Vertex>();
 		q.add(root);
 
-		while (! q.isEmpty()) {
+		while (!q.isEmpty()) {
 			Vertex v = q.poll();
 			if (v.children.isEmpty()) {
 				leaves.add(v);
@@ -227,7 +228,6 @@ public class Application {
 				int parentI = dofList.indexOf(d);
 				int childI = v.rowDofs.indexOf(d);
 				for (DOF d2 : v.rowDofs) {
-
 					int parentJ = dofList.indexOf(d2);
 
 					int childJ = v.rowDofs.indexOf(d2);

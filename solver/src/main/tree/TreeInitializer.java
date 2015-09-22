@@ -1,32 +1,13 @@
 package main.tree;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
 
 public class TreeInitializer {
-	enum Op {
-		FIND_ELIMINATED_DOFS,
-		FIND_BOUNDARY_ELEMS
-	}
-
-	private static final Map<Op, Long> times = new EnumMap<>(Op.class);
-
-	static {
-		for (Op op: Op.values()) {
-			times.put(op, 0L);
-		}
-	}
-
-	private static void addTime(Op op, long dt) {
-		long value = times.get(op);
-		times.put(op, value + dt);
-	}
 	
 	public static void visit(Vertex vertex) {
 		Queue<Vertex> q = new ArrayDeque<>();
@@ -60,14 +41,9 @@ public class TreeInitializer {
 				dofs.addAll(v.getNotEliminatedDOFS());
 				chlidrenBoundaryElements.addAll(v.boundaryElements);
 			}
-			long t1 = System.nanoTime();
 			findEliminatedDofs(vertex, dofs, chlidrenBoundaryElements);
-			long t2 = System.nanoTime();
-			addTime(Op.FIND_ELIMINATED_DOFS, t2 - t1);
 			vertex.rowDofs.addAll(dofs);
 			findBoundaryElements(vertex);
-			long t3 = System.nanoTime();
-			addTime(Op.FIND_BOUNDARY_ELEMS, t3 - t2);
 			
 		}
 		initializeMatrices(vertex);

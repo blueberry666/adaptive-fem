@@ -2,62 +2,60 @@ package main.generator;
 
 public interface Neighborhood {
 
-	class Empty implements Neighborhood{
-		
-		public Empty(){
-			
+	class Empty implements Neighborhood {
+
+		public Empty() {
+
 		}
-		
-		 @Override
-         public String toString() {
-                return "Empty";
-         }
-         
+
+		@Override
+		public String toString() {
+			return "Empty";
+		}
+
 	}
-	
-	class SinglePart implements Neighborhood{
-		
+
+	class SinglePart implements Neighborhood {
+
 		public Part part;
-		
-		public SinglePart(Part p){
+
+		public SinglePart(Part p) {
 			part = p;
 		}
-		
+
 		@Override
-        public String toString() {
-               return String.format("SinglePart(id=%d)", part.id);
-        }
-        
-		
+		public String toString() {
+			return String.format("SinglePart(id=%d)", part.id);
+		}
+
 	}
-	
-	class OneEdge implements Neighborhood{
-		
+
+	class OneEdge implements Neighborhood {
+
 		public Edge edge;
-		
-		public OneEdge(Edge e){
+
+		public OneEdge(Edge e) {
 			edge = e;
 		}
-		
+
 		@Override
-        public String toString() {
-               return String.format("OneEdge(id=%d)", edge.hashCode());
-        }
-        
-		
+		public String toString() {
+			return String.format("OneEdge(id=%d)", edge.hashCode());
+		}
+
 	}
-	
-	class TwoEdge implements Neighborhood{
-		
+
+	class TwoEdge implements Neighborhood {
+
 		public Edge topOrRight;
 		public Edge bottomOrLeft;
-		
-		public TwoEdge(Edge topRight, Edge bottomLeft){
+
+		public TwoEdge(Edge topRight, Edge bottomLeft) {
 			topOrRight = topRight;
 			bottomOrLeft = bottomLeft;
 		}
-		
-		public Edge getEdge(Direction d){
+
+		public Edge getEdge(Direction d) {
 			switch (d) {
 			case TOP:
 			case RIGHT:
@@ -69,10 +67,11 @@ public interface Neighborhood {
 			return null;
 
 		}
-		
+
 		@Override
-        public String toString() {
-               return String.format("TwoEdges(topright=%d, leftbottom=%d)", topOrRight.hashCode(), bottomOrLeft.hashCode());
-        }
+		public String toString() {
+			return String.format("TwoEdges(topright=%d, leftbottom=%d)",
+					topOrRight.hashCode(), bottomOrLeft.hashCode());
+		}
 	}
 }

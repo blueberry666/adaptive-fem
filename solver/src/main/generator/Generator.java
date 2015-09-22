@@ -9,7 +9,7 @@ import java.util.Queue;
 
 import main.tree.Element2D;
 import main.tree.Vertex;
-import main.utils.ClassyClass;
+import main.utils.VertexData;
 import main.utils.Cut;
 import main.utils.CutRectangle;
 
@@ -30,7 +30,7 @@ public class Generator {
 			root.setEdge(d, e);
 		}
 	}
-	
+
 	public Vertex buildEliminationTree() {
 		List<Part> partLeaves = new ArrayList<>();
 		getLeaves(root, partLeaves);
@@ -41,26 +41,26 @@ public class Generator {
 	private Vertex elementsToVertex(Part firstPart, Map<Part, Element2D> map) {
 
 		Vertex rootVertex = new Vertex(map.get(firstPart));
-		Queue<ClassyClass> q = new ArrayDeque<>();
-		
-		for (Part p : firstPart.children) {
-			q.add(new ClassyClass(rootVertex, p));
-		}
-		while (!q.isEmpty()){
-			ClassyClass classyy = q.poll();
-            Part part = classyy.part;
-            Vertex parent = classyy.vertex;
-            Vertex v = new Vertex(map.get(part));
-            parent.children.add(v);
+		Queue<VertexData> q = new ArrayDeque<>();
 
-            for (Part p : part.children) {
-                   q.add(new ClassyClass(v, p));
-            }
-     }
+		for (Part p : firstPart.children) {
+			q.add(new VertexData(rootVertex, p));
+		}
+		while (!q.isEmpty()) {
+			VertexData classyy = q.poll();
+			Part part = classyy.part;
+			Vertex parent = classyy.vertex;
+			Vertex v = new Vertex(map.get(part));
+			parent.children.add(v);
+
+			for (Part p : part.children) {
+				q.add(new VertexData(v, p));
+			}
+		}
 		return rootVertex;
 
 	}
-	
+
 	public Part[] breakPart(List<Integer> path, BreakType breakType, Part root) {
 		Part parent = getPartByPath(path, root);
 		if (!parent.children.isEmpty()) {
@@ -201,7 +201,7 @@ public class Generator {
 					.getEdge(topBottom);
 		} else if (parentEdgeNeighborhood instanceof Neighborhood.OneEdge) {
 			throw new RuntimeException(
-					"You fucked up! You cannot do that! Only one level of breaking is available!");
+					"You cannot do that! Only one level of breaking is available!");
 		} else {
 			edge.setNeighborhood(leftOrRight, new Neighborhood.OneEdge(
 					parentEdge));
@@ -215,9 +215,9 @@ public class Generator {
 	}
 
 	public void getLeaves(Part rooty, List<Part> leaves) {
-		Queue <Part> q = new ArrayDeque<>();
+		Queue<Part> q = new ArrayDeque<>();
 		q.add(rooty);
-		while(!q.isEmpty()){
+		while (!q.isEmpty()) {
 			Part root = q.poll();
 			if (root.children.isEmpty()) {
 				leaves.add(root);
@@ -227,9 +227,7 @@ public class Generator {
 				}
 			}
 		}
-		
-//		System.out.println("after getLeaves");
-		
+
 	}
 
 	public List<Part> getLeaves() {
@@ -238,8 +236,8 @@ public class Generator {
 		return leaves;
 
 	}
-	
-	public Part getRoot(){
+
+	public Part getRoot() {
 		return root;
 	}
 }

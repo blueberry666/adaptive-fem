@@ -6,7 +6,7 @@ import main.tree.DOF;
 import main.tree.Vertex;
 import main.utils.MatrixUtil;
 
-public class BackwardSubstitutionProduction extends Production{
+public class BackwardSubstitutionProduction extends Production {
 
 	public BackwardSubstitutionProduction(Vertex vert) {
 		super(vert);
@@ -14,11 +14,11 @@ public class BackwardSubstitutionProduction extends Production{
 
 	@Override
 	public void apply() {
-		
-		for(Vertex child : vertex.children){
-			double [] x = new double[vertex.A.length];
+
+		for (Vertex child : vertex.children) {
+			double[] x = new double[vertex.A.length];
 			int i = 0;
-			for(DOF d : child.getNotEliminatedDOFS()){
+			for (DOF d : child.getNotEliminatedDOFS()) {
 				int parentI = vertex.rowDofs.indexOf(d);
 				x[i] = vertex.x[parentI];
 				++i;
@@ -26,9 +26,9 @@ public class BackwardSubstitutionProduction extends Production{
 
 			MatrixUtil.substitute(child.A, child.b, x, child.eliminatedDofs);
 			child.x = Arrays.copyOf(child.b, child.b.length);
-			
+
 		}
-		
+
 	}
 
 }

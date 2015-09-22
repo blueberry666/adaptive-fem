@@ -24,7 +24,6 @@ public class SimpleExecutor implements Executor{
 		try {
 			countDownLatch.await();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -39,7 +38,6 @@ public class SimpleExecutor implements Executor{
 		try {
 			executorService.awaitTermination(5, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

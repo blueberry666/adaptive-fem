@@ -1,7 +1,6 @@
 package main.productions;
 import main.tree.DOF;
 import main.tree.Vertex;
-import main.utils.MatrixUtil;
 
 
 
@@ -29,9 +28,6 @@ public class CombineChildrenProduction extends Production {
 				vertex.b[parentI] += child.b[childI];
 			}
 		}
-//		System.out.println("matrix A in combine children");
-//		MatrixUtil.printMatrix(vertex.A);
-//		System.out.println();
 
 	}
 

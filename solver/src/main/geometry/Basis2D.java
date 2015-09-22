@@ -32,7 +32,6 @@ public class Basis2D {
 			double bi = 0;
 			for(int i=0;i<4;++i){
 				Rectangle r = element.rectangle;
-				//a_i*P_i
 				bi += shapeFunctions[i].eval(normalize(r.x0,r.x1, x), normalize(r.y0, r.y1, y))*functions[i];
 			}
 			

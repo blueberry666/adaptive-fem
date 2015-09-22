@@ -19,31 +19,19 @@ public class Vertex {
 	public int eliminatedDofs;
 	public List<Element> boundaryElements = new LinkedList<>();
 	
-//	public Vertex(Vertex parent){
-//		this.parent = parent;
-//		
-//	}
-	
 	public Vertex(Element e){
 		element = e;
 	}
 
-	
-	
 	public void generateRandomValues(){
 		A = MatrixUtil.generateRandomMatrix(A.length, A.length);
 		b = MatrixUtil.generateRandomVector(b.length);
 
 	}
 	
-	
-	
 	public List<DOF> getNotEliminatedDOFS(){
 		return rowDofs.subList(eliminatedDofs, rowDofs.size());
 	}
-	
-	
-	
 
 }
 

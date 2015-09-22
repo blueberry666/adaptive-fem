@@ -6,14 +6,14 @@ import java.util.List;
 
 import main.productions.Production;
 
-public class NotSoDummyNode implements Node {
+public class SmartNode implements Node {
 	
 	
 	private Production production;
 	private List<Node> inNodes = new ArrayList<>();
 	private String name;
 	
-	public NotSoDummyNode(String name, Production prod){
+	public SmartNode(String name, Production prod){
 		this.name = name;
 		this.production = prod;
 	}

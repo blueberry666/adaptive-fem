@@ -15,10 +15,8 @@ public class Cut {
 	}
 
 	public static class Node {
+		
 		private Node[] children;
-
-		private double a;
-		private double b;
 		private Cut edges[];
 
 		private Node(Cut leftEdge, Cut rightEdge) {

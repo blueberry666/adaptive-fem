@@ -1,21 +1,21 @@
 package main.utils;
 
 import main.generator.Part;
-import main.scheduler.NotSoDummyNode;
+import main.scheduler.SmartNode;
 import main.tree.Vertex;
 
-public class ClassyClass {
+public class VertexData {
 	
 	public Vertex vertex;
-	public NotSoDummyNode parent;
+	public SmartNode parent;
 	public Part part;
 	
-	public ClassyClass(Vertex v, NotSoDummyNode n){
+	public VertexData(Vertex v, SmartNode n){
 		vertex = v;
 		parent = n;
 	}
 	
-	public ClassyClass(Vertex v, Part part){
+	public VertexData(Vertex v, Part part){
 		this.part = part;
 		this.vertex = v;
 	}

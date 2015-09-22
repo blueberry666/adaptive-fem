@@ -45,15 +45,8 @@ public class GraphScheduler {
 
 	public List<List<Node>> schedule(Collection<? extends Node> starNodes) {
 		Set<Node> graph = new HashSet<>();
-		long before = System.currentTimeMillis();
 		findNodes(graph, starNodes);
-		long after = System.currentTimeMillis();
-//		System.out.println("Graph traversal: " + (after - before));
-//		System.out.println("Nodes: " + graph.size());
-		long beforeRev = System.currentTimeMillis();
 		Map<Node, List<Node>> rev = buildReverse(graph);
-		long afterRev = System.currentTimeMillis();
-//		System.out.println("Building reverse: " + (afterRev - beforeRev));
 		List<List<Node>> groups = new LinkedList<>();
 		List<Node> layer = findFirstLayer(graph);
 		graph.removeAll(layer);
